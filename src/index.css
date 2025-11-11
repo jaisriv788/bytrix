@@ -1,0 +1,27 @@
+body {
+  color: white;
+  background-color: #151617;
+  scroll-behavior: smooth;
+}
+/* Remove arrows in Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove arrows in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #0afcb3, #1da1ee, #0891e0, #08e7d5);
+  background-size: 300% 200%; /* Make gradient larger than container to allow shift */
+  background-position: 0% 0%;
+  transition: background-position 0.7s ease-in-out; /* Smooth transition */
+}
+
+.animated-gradient:hover {
+  background-position: 100% 0%; /* Shift gradient to the left on hover */
+}
