@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import contractAbi from "../../contractAbi.json";
-import useEthers from "../../hooks/useEthers";
 import { ethers, } from "ethers";
 import { FaCircleChevronRight } from "react-icons/fa6";
 import { useNavigate } from "react-router";
@@ -9,20 +8,13 @@ import { useNotification } from "../../hooks/useNotification";
 
 function SavingBox() {
   const navigate = useNavigate();
-  const [boxIds, setBoxIds] = useState([]);
-  const [loadingClaim, setLoadingClaim] = useState(false);
-  // const [loadingWithdraw, setLoadingWithdraw] = useState(false);
-  const [processing, setProcessing] = useState(false);
-
-  const [refetch, setRefetch] = useState(false);
-  const { showSuccess, showError } = useNotification();
+  const { showError } = useNotification();
 
   const isConnected = useSelector((state) => state.user.isConnected);
   const walletAddress = useSelector((state) => state.user.walletAddress);
   const contractAddress = useSelector((state) => state.user.contractAddress);
   const referrer = useSelector((state) => state.user.referrer)
 
-  const { signer } = useEthers();
 
   useEffect(() => {
     const fetchBoxIds = async () => {
@@ -34,8 +26,8 @@ function SavingBox() {
         const ids = await contract.getUserBoxIds(walletAddress);
         // console.log("ids",ids);
         const parsedIds = ids.map(id => Number(id));
-        // console.log("User Box IDs:", parsedIds);
-        setBoxIds(parsedIds);
+        console.log("User Box IDs:", parsedIds);
+
 
         const stakes = await Promise.all(
           parsedIds.map(async id => {
@@ -59,128 +51,11 @@ function SavingBox() {
     };
 
     fetchBoxIds();
-  }, [isConnected, walletAddress, refetch]);
+  }, [isConnected, walletAddress]);
 
-  const handleRewardSubmit = async (boxId) => {
-    try {
-      if (!signer) {
-        showError("Please connect your wallet first.");
-        return;
-      }
 
-      if (!boxId || boxIds.length === 0) {
-        showError("No active boxes found for this wallet.");
-        return;
-      }
-      console.log(typeof boxId);
-      setLoadingClaim(true);
-      const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
-      const stake = await contract.boxStakes(boxId);
-      const owner = stake.owner.toLowerCase();
-      const user = walletAddress.toLowerCase();
-      const amount = ethers.formatUnits(stake.amount, 18);
-      const lastClaimTime = Number(stake.lastClaimTime);
-      const unstaked = stake.unstaked;
-      if (owner !== user) {
-        showError("You are not the owner of this box.");
-        setLoadingClaim(false);
-        return;
-      }
-      if (unstaked) {
-        showError("This box is already unstaked.");
-        setLoadingClaim(false);
-        return;
-      }
-      const now = Math.floor(Date.now() / 1000);
-      if (now - lastClaimTime < 60) {
-        showError("Please wait before claiming interest again.");
-        setLoadingClaim(false);
-        return;
-      }
-      const dailyBps = 30;
-      const PERCISION = 10000;
-      const elapsed = now - lastClaimTime;
-      console.log(elapsed);
-      const interest = (amount * dailyBps * elapsed) / (PERCISION * 86400);
-      //console.log("interest", (interest/1e18));
-      if (interest <= 0) {
-        showError("No interest accrued yet.");
-        setLoadingClaim(false);
-        return;
-      }
 
-      const tx = await contract.claimBoxInterest(boxId, { gasLimit: 300000 });
-      await tx.wait();
-
-      showSuccess(`Interest claimed for box #${boxId}`);
-      setRefetch(prev => !prev);
-    } catch (error) {
-      console.error(error);
-      showError("Transaction Failed");
-    } finally {
-      setLoadingClaim(false);
-    }
-  };
-
-  // const handleWithdrawSubmit = async (boxId) => {
-  //   //  alert("ok");
-  //   const BOX_MIN_STAKE_SECONDS = 24 * 60 * 60;
-  //   try {
-  //     if (!signer) {
-  //       showError("Please connect your wallet first.");
-  //       return;
-  //     }
-
-  //     if (!boxId || boxIds.length === 0) {
-  //       showError("No active boxes found for this wallet.");
-  //       return;
-  //     }
-  //     console.log(typeof boxId, boxId);
-  //     setLoadingWithdraw(true);
-  //     const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-
-  //     const stake = await contract.boxStakes(boxId);
-  //     const owner = stake.owner.toLowerCase();
-  //     const user = walletAddress.toLowerCase();
-  //     const amount = ethers.formatUnits(stake.amount, 18);
-  //     const lastClaimTime = Number(stake.lastClaimTime);
-  //     const unstaked = stake.unstaked;
-  //     if (owner !== user) {
-  //       showError("You are not the owner of this box.");
-  //       setLoadingWithdraw(false);
-  //       return;
-  //     }
-  //     if (unstaked) {
-  //       showError("This box is already unstaked.");
-  //       setLoadingWithdraw(false);
-  //       return;
-  //     }
-  //     const startTime = Number(stake.startTime);
-  //     const now = Math.floor(Date.now() / 1000);
-
-  //     if (now < startTime + BOX_MIN_STAKE_SECONDS) {
-  //       const remaining = startTime + BOX_MIN_STAKE_SECONDS - now;
-  //       const hours = Math.floor(remaining / 3600);
-  //       const minutes = Math.floor((remaining % 3600) / 60);
-  //       const seconds = remaining % 60;
-  //       showError(`You can withdraw after 24 hours. Time remaining: ${hours}h ${minutes}m ${seconds}s`);
-  //       setLoadingWithdraw(false);
-  //       return;
-  //     }
-
-  //     const tx = await contract.unstakeBox(boxId, { gasLimit: 300000 });
-  //     await tx.wait();
-
-  //     showSuccess(`Interest claimed for box #${boxId}`);
-  //     setRefetch(prev => !prev);
-  //   } catch (error) {
-  //     console.error(error);
-  //     showError("Transaction Failed");
-  //   } finally {
-  //     setLoadingWithdraw(false);
-  //   }
-  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-2">

@@ -1,16 +1,25 @@
-import { ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ethers } from "ethers";
 import contractAbi from "../../contractAbi.json";
+import useEthers from "../../hooks/useEthers";
+import { useNotification } from "../../hooks/useNotification";
 
 function SavingOrders() {
   const isConnected = useSelector((state) => state.user.isConnected);
   const walletAddress = useSelector((state) => state.user.walletAddress);
   const contractAddress = useSelector((state) => state.user.contractAddress);
 
+  const { signer } = useEthers();
+  const { showSuccess, showError } = useNotification();
+
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingWithdraw, setLoadingWithdraw] = useState(false);
+  const [loadingId, setLoadingId] = useState(null)
+  const [loadingClaim, setLoadingClaim] = useState(false);
+  const [loadingClaimId, setLoadingClaimId] = useState(null)
+
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -53,6 +62,130 @@ function SavingOrders() {
     fetchOrders();
   }, [isConnected, walletAddress]);
 
+  const handleWithdrawSubmit = async (boxId, i) => {
+    const BOX_MIN_STAKE_SECONDS = 24 * 60 * 60;
+    try {
+      if (!signer) {
+        showError("Please connect your wallet first.");
+        return;
+      }
+
+      if (!boxId) {
+        showError("No active boxes found for this wallet.");
+        return;
+      }
+      console.log(typeof boxId, boxId);
+      setLoadingWithdraw(true);
+      setLoadingId(i)
+      const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+      const stake = await contract.boxStakes(boxId);
+      const owner = stake.owner.toLowerCase();
+      const user = walletAddress.toLowerCase();
+      const amount = ethers.formatUnits(stake.amount, 18);
+      const lastClaimTime = Number(stake.lastClaimTime);
+      console.log({ amount, lastClaimTime })
+      const unstaked = stake.unstaked;
+      if (owner !== user) {
+        showError("You are not the owner of this box.");
+        setLoadingWithdraw(false);
+        return;
+      }
+      if (unstaked) {
+        showError("This box is already unstaked.");
+        setLoadingWithdraw(false);
+        return;
+      }
+      const startTime = Number(stake.startTime);
+      const now = Math.floor(Date.now() / 1000);
+
+      if (now < startTime + BOX_MIN_STAKE_SECONDS) {
+        const remaining = startTime + BOX_MIN_STAKE_SECONDS - now;
+        const hours = Math.floor(remaining / 3600);
+        const minutes = Math.floor((remaining % 3600) / 60);
+        const seconds = remaining % 60;
+        showError(`You can withdraw after 24 hours. Time remaining: ${hours}h ${minutes}m ${seconds}s`);
+        setLoadingWithdraw(false);
+        return;
+      }
+
+      const tx = await contract.unstakeBox(boxId, { gasLimit: 300000 });
+      await tx.wait();
+
+      showSuccess(`Interest claimed for box #${boxId}`);
+    } catch (error) {
+      console.error(error);
+      showError("Transaction Failed");
+    } finally {
+      setLoadingWithdraw(false);
+      setLoadingId(null)
+    }
+  };
+
+  const handleRewardSubmit = async (boxId, i) => {
+    try {
+      if (!signer) {
+        showError("Please connect your wallet first.");
+        return;
+      }
+
+      if (!boxId) {
+        showError("No active boxes found for this wallet.");
+        return;
+      }
+
+      console.log(typeof boxId);
+      setLoadingClaim(true);
+      setLoadingClaimId(i)
+      const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+      const stake = await contract.boxStakes(boxId);
+      const owner = stake.owner.toLowerCase();
+      const user = walletAddress.toLowerCase();
+      const amount = ethers.formatUnits(stake.amount, 18);
+      const lastClaimTime = Number(stake.lastClaimTime);
+      const unstaked = stake.unstaked;
+      if (owner !== user) {
+        showError("You are not the owner of this box.");
+        setLoadingClaim(false);
+        return;
+      }
+      if (unstaked) {
+        showError("This box is already unstaked.");
+        setLoadingClaim(false);
+        return;
+      }
+      const now = Math.floor(Date.now() / 1000);
+      if (now - lastClaimTime < 60) {
+        showError("Please wait before claiming interest again.");
+        setLoadingClaim(false);
+        return;
+      }
+      const dailyBps = 30;
+      const PERCISION = 10000;
+      const elapsed = now - lastClaimTime;
+      console.log(elapsed);
+      const interest = (amount * dailyBps * elapsed) / (PERCISION * 86400);
+      //console.log("interest", (interest/1e18));
+      if (interest <= 0) {
+        showError("No interest accrued yet.");
+        setLoadingClaim(false);
+        return;
+      }
+
+      const tx = await contract.claimBoxInterest(boxId, { gasLimit: 300000 });
+      await tx.wait();
+
+      showSuccess(`Interest claimed for box #${boxId}`);
+    } catch (error) {
+      console.error(error);
+      showError("Transaction Failed");
+    } finally {
+      setLoadingClaim(false);
+      setLoadingClaimId(null)
+    }
+  };
+
   return (
     <div className="pt-20 px-2 min-h-screen">
       <div className="flex justify-center items-center gap-2">
@@ -84,6 +217,7 @@ function SavingOrders() {
                 <th className="text-center">Last Claim</th>
                 <th className="text-center">Withdrawn</th>
                 <th className="text-center">Withdraw</th>
+                <th className="text-center">Claim</th>
               </tr>
             </thead>
             <tbody className="text-[#e2e8f0] bg-gradient-to-b from-[#13263c] to-[#1d3d55] md:text-lg">
@@ -98,8 +232,13 @@ function SavingOrders() {
                     {new Date(item.timestamp * 1000).toLocaleString()}
                   </td>
                   <td className="text-center">{item.withdrawn ? "Yes" : "No"}</td>
-                  <td className="flex gap-2 justify-center items-center">
-                    button
+                  <td className="">
+                    <button disabled={loadingWithdraw && loadingId == index} onClick={() => handleWithdrawSubmit(item.id, index)} className="animated-gradient h-full font-semibold rounded-lg text-base px-4 cursor-pointer"
+                    >{loadingWithdraw && loadingId == index ? "Loading..." : "Withdraw"}</button>
+                  </td>
+                  <td className="">
+                    <button disabled={loadingClaim && loadingClaimId == index} onClick={() => handleRewardSubmit(item.id, index)} className="animated-gradient h-full font-semibold rounded-lg text-base px-4 cursor-pointer"
+                    >{loadingClaim && loadingClaimId == index ? "Loading..." : "Claim"}</button>
                   </td>
                 </tr>
               ))}
