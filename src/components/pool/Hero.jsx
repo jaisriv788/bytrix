@@ -12,11 +12,11 @@ import { CircleQuestionMark } from "lucide-react";
 function Hero({ showModal, setUserStats, setData }) {
   // ✅ Centralized default plans
   const defaultPlans = [
-    { name: "12 hours", clicked: true, percentage: 0.1, planId: 1, fees: 1, min: 1, max: 10 },
-    { name: "1 Day", clicked: false, percentage: 0.3, planId: 2, fees: 2, min: 10, max: 250 },
-    { name: "7 Days", clicked: false, percentage: 3, planId: 3, fees: 3, min: 50, max: 1000 },
-    { name: "14 Days", clicked: false, percentage: 7.5, planId: 4, fees: 4, min: 50, max: 5000 },
-    { name: "30 Days", clicked: false, percentage: 20, planId: 5, fees: 5, min: 100, max: 10000 },
+    { name: "12 Hours", clicked: true, percentage: 0.1, planId: 1, fees: 1, min: 1, max: 10 },
+    { name: "1 Day", clicked: false, percentage: 0.3, planId: 2, fees: 1, min: 10, max: 250 },
+    { name: "7 Days", clicked: false, percentage: 3, planId: 3, fees: 1, min: 50, max: 1000 },
+    { name: "14 Days", clicked: false, percentage: 7.5, planId: 4, fees: 1, min: 50, max: 5000 },
+    { name: "30 Days", clicked: false, percentage: 20, planId: 5, fees: 1, min: 100, max: 10000 },
   ];
 
   const [dataBox, setDataBox] = useState(defaultPlans);

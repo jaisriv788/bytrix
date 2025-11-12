@@ -8,6 +8,7 @@ import WalletOptions from "./components/WalletOptions";
 import Total from "./components/saving/Total";
 import Form from "./components/saving/Form";
 import SavingOrders from "./components/saving/SavingOrders";
+import Lease from "./screens/Lease";
 import { useState, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 
@@ -87,6 +88,7 @@ function App() {
         <Route path="/saving/total/:ref?" element={<Total />} />
         <Route path="/saving/form/:ref?" element={<Form showModal={visibility}/>} />
         <Route path="/saving/orders/:ref?" element={<SavingOrders />} />
+        <Route path="/lease/:ref?" element={<Lease showModal={visibility} />} />
         <Route
           path="/*"
           element={

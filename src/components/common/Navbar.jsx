@@ -10,7 +10,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { setConnection, setAddress, setReferrer } from "../../redux/slice/userDetails";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router";
+import { Link, useNavigate, useLocation, matchPath } from "react-router";
 
 const Navbar = ({ showModal }) => {
   const [wallets, setWallets] = useState([]);
@@ -25,12 +25,19 @@ const Navbar = ({ showModal }) => {
   const account = useSelector((state) => state.user.walletAddress);
   const referrer = useSelector((state) => state.user.referrer)
 
-  const isHome = location.pathname === "/";
-  const isLoop = location.pathname === "/loop";
-  const isSaving = location.pathname === "/saving";
-  const isSavingTotal = location.pathname === "/saving/total";
-  const isSavingForm = location.pathname === "/saving/form"
-  const isSavingOrder = location.pathname === "/saving/orders"
+  const path = location.pathname;
+
+  const isHome =
+    matchPath({ path: "/:ref?" }, path) &&
+    !path.startsWith("/loop") &&
+    !path.startsWith("/saving") && !path.startsWith("/lease");
+
+  const isLoop = matchPath({ path: "/loop/:ref?" }, path);
+  const isSaving = matchPath({ path: "/saving/:ref?" }, path);
+  const isSavingTotal = matchPath({ path: "/saving/total/:ref?" }, path);
+  const isSavingForm = matchPath({ path: "/saving/form/:ref?" }, path);
+  const isSavingOrder = matchPath({ path: "/saving/orders/:ref?" }, path);
+  const isLease = matchPath({ path: "/lease/:ref?" }, path);
 
   function handleLogout() {
     dispatch(setAddress(null));
@@ -101,6 +108,15 @@ const Navbar = ({ showModal }) => {
               } transition ease-in-out duration-300`}
           >
             Savings
+          </Link>
+          <Link
+            to={referrer ? `/lease/` + referrer : "/lease"}
+            className={`${isLease
+              ? "text-[#00FFFF]"
+              : "hover:text-[#00FFFF]"
+              } transition ease-in-out duration-300`}
+          >
+            Lease
           </Link>
         </div>
       </div>
@@ -184,6 +200,14 @@ const Navbar = ({ showModal }) => {
             <a>
               <HandCoins size={15} />
               Saving
+            </a>
+          </li>
+          <li
+            onClick={() => navigate(referrer ? `/lease/` + referrer : "/lease")}
+          >
+            <a>
+              <HandCoins size={15} />
+              Lease
             </a>
           </li>
 

@@ -5,27 +5,114 @@ import { ethers } from "ethers";
 import contractAbi from "../../contractAbi.json";
 
 const plans = [
-  { name: "12 hours", planId: 1, duration: 12 * 60 * 60 * 1000 },
+  { name: "12 Hours", planId: 1, duration: 12 * 60 * 60 * 1000 },
   { name: "1 Day", planId: 2, duration: 24 * 60 * 60 * 1000 },
   { name: "7 Days", planId: 3, duration: 7 * 24 * 60 * 60 * 1000 },
   { name: "14 Days", planId: 4, duration: 14 * 24 * 60 * 60 * 1000 },
   { name: "30 Days", planId: 5, duration: 30 * 24 * 60 * 60 * 1000 },
 ];
 
-// ✨ Stylish Countdown Timer
+// Helper: normalize an on-chain timestamp (BigNumber / BigInt / string / number)
+// to a plain Number of milliseconds and also return whether the original looked
+// like seconds or milliseconds.
+function normalizeTimestampToMs(raw) {
+  // Try to extract primitive value
+  let v = raw;
+  try {
+    // ethers BigNumber has toNumber, BigInt has value as BigInt
+    if (v && typeof v === "object") {
+      if (typeof v.toNumber === "function") {
+        v = v.toNumber();
+      } else if (typeof v.toString === "function") {
+        v = v.toString();
+      }
+    }
+  } catch (e) {
+    // fallthrough
+    v = String(raw);
+  }
+
+  const numeric = Number(v);
+
+  if (!isFinite(numeric)) {
+    return { ms: 0, guessedUnit: "unknown" };
+  }
+
+  // Heuristics:
+  // - If value > 1e12 treat as milliseconds (since 1e12 ms ~ 2001-09-09)
+  // - Otherwise treat as seconds and multiply by 1000
+  if (numeric > 1e12) {
+    return { ms: Math.floor(numeric), guessedUnit: "ms" };
+  } else {
+    return { ms: Math.floor(numeric * 1000), guessedUnit: "s" };
+  }
+}
+
+// ✨ Stylish Countdown Timer (logic-only improvements)
 function CountdownTimer({ startTime, planId }) {
+  // find plan duration in ms
   const plan = plans.find((p) => p.planId === planId);
   const duration = plan?.duration || 0;
-  const endTime = Number(startTime) * 1000 + duration;
 
-  const [remaining, setRemaining] = useState(() => Math.max(0, endTime - Date.now()));
+  // normalize raw provided timestamp to ms
+  const { ms: providedMs, guessedUnit } = normalizeTimestampToMs(startTime);
+
+  // Two possible interpretations:
+  // 1) providedMs is a start timestamp in ms -> endIfStart = providedMs + duration
+  // 2) providedMs is already an end/maturity timestamp in ms -> endIfProvided = providedMs
+  const endIfStart = providedMs + duration;
+  const endIfProvided = providedMs;
+
+  // Now decide which end time makes sense:
+  // - If provided looks like seconds (guessedUnit === "s"), prefer endIfStart,
+  //   but verify by checking remaining ranges.
+  // - If provided looks like ms or either candidate yields valid remaining time
+  //   within [0, duration], choose the candidate that produces remaining <= duration.
+  const now = Date.now();
+
+  const remainingIfStart = Math.max(0, endIfStart - now);
+  const remainingIfProvided = Math.max(0, endIfProvided - now);
+
+  // Preference logic (robust):
+  // - If remainingIfProvided <= duration and remainingIfProvided <= remainingIfStart:
+  //     -> choose endIfProvided (the contract likely returned the maturity timestamp)
+  // - Else if remainingIfStart <= duration:
+  //     -> choose endIfStart (contract returned deposit start timestamp)
+  // - Else fallback to endIfStart (safe default)
+  let chosenEnd = endIfStart;
+  let chosenRemaining = remainingIfStart;
+
+  if (remainingIfProvided <= duration && remainingIfProvided <= remainingIfStart) {
+    chosenEnd = endIfProvided;
+    chosenRemaining = remainingIfProvided;
+  } else if (remainingIfStart <= duration) {
+    chosenEnd = endIfStart;
+    chosenRemaining = remainingIfStart;
+  } else {
+    // fallback: pick the smaller positive remaining to avoid huge doubled durations
+    if (remainingIfProvided < remainingIfStart) {
+      chosenEnd = endIfProvided;
+      chosenRemaining = remainingIfProvided;
+    } else {
+      chosenEnd = endIfStart;
+      chosenRemaining = remainingIfStart;
+    }
+  }
+
+  // Local state driven by chosenEnd
+  const [remaining, setRemaining] = useState(() => Math.max(0, chosenEnd - now));
 
   useEffect(() => {
+    // If startTime or planId changes we should recompute
+    setRemaining(Math.max(0, chosenEnd - Date.now()));
+
     const interval = setInterval(() => {
-      setRemaining(Math.max(0, endTime - Date.now()));
+      setRemaining(Math.max(0, chosenEnd - Date.now()));
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [endTime]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [providedMs, planId, chosenEnd]); // re-run when providedMs or planId changes
 
   const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
   const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -34,9 +121,13 @@ function CountdownTimer({ startTime, planId }) {
 
   if (remaining <= 0) {
     return (
-      <span className="font-mono font-semibold text-red-400 tracking-widest">
-        0
-      </span>
+      <div
+        className={`font-mono font-semibold text-red-400 
+          bg-[#1e293b]/50 px-3 py-1 rounded-lg shadow-md border
+          animate-pulse-slow transition-all duration-300 inline-block`}
+      >
+        00:00:00
+      </div>
     );
   }
 
@@ -45,8 +136,8 @@ function CountdownTimer({ startTime, planId }) {
     remaining < 60 * 60 * 1000 // <1 hour
       ? "text-orange-400 border-orange-400/30"
       : remaining < 6 * 60 * 60 * 1000 // <6 hours
-        ? "text-yellow-300 border-yellow-300/30"
-        : "text-cyan-300 border-cyan-300/30";
+      ? "text-yellow-300 border-yellow-300/30"
+      : "text-cyan-300 border-cyan-300/30";
 
   return (
     <div
@@ -57,7 +148,7 @@ function CountdownTimer({ startTime, planId }) {
       {days > 0 ? `${days}d ` : ""}
       {String(hours).padStart(2, "0")}:
       {String(minutes).padStart(2, "0")}:
-      {String(seconds).padStart(2, "0")}
+      {String(seconds).padStart(2, "0")}h
     </div>
   );
 }
@@ -67,7 +158,6 @@ function Orders({ tableData }) {
 
   const isConnected = useSelector((state) => state.user.isConnected);
   const contractAddress = useSelector((state) => state.user.contractAddress);
-  // const account = useSelector((state) => state.user.walletAddress);
 
   async function fetchTableData() {
     const provider = new ethers.JsonRpcProvider(
@@ -80,10 +170,13 @@ function Orders({ tableData }) {
     for (const item of tableData) {
       const res = await ctr.deposits(item);
 
+      // Keep the raw 'date' as returned by the chain (BigNumber/BigInt/string).
+      // CountdownTimer will normalize and decide if it's start or end.
       const formatted = {
         address: res[0],
         amount: Number(ethers.formatUnits(res[1], 18)),
         reward: Number(ethers.formatUnits(res[2], 18)),
+        // pass the raw value through (but coerce BigNumber to string if needed)
         date: res[3],
         withdrawn: res[4],
         planId: Number(res[5]),
@@ -163,33 +256,6 @@ function Orders({ tableData }) {
           </table>
         </div>
       )}
-
-      {/* {isConnected && (
-        <div className="mt-10 bg-gradient-to-b from-[#13263c] to-[#1d3d55] max-w-7xl mx-auto px-4 py-4 rounded-lg">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 text-white font-semibold">
-            <span className="text-base md:text-lg font-bold">
-              Referral Link:
-            </span>
-
-            <div className="flex items-center gap-2 bg-gradient-to-r from-[#0a2540] to-[#0d3c61] rounded-lg px-3 py-2 w-full md:w-auto">
-              <div className="overflow-x-auto whitespace-nowrap text-sm md:text-base scrollbar-hide">
-                {`http://localhost:5173/bytrix/${account}`}
-              </div>
-
-              <Copy
-                onClick={() => {
-                  navigator.clipboard
-                    .writeText(`http://localhost:5173/bytrix/${account}`)
-                    .then(() => alert("Address Copied!"))
-                    .catch((e) => alert("Error Occurred", e));
-                }}
-                size={18}
-                className="hover:text-gray-300 cursor-pointer transition-transform transform hover:scale-110"
-              />
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }
