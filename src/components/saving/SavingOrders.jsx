@@ -68,10 +68,11 @@ function SavingOrders() {
         return;
       }
 
-      if (!boxId) {
+      if (boxId == null || boxId == undefined) {
         showError("No active boxes found for this wallet.");
         return;
       }
+
       console.log(typeof boxId, boxId);
       setLoadingWithdraw(true);
       setLoadingId(i)
@@ -127,7 +128,7 @@ function SavingOrders() {
         return;
       }
 
-      if (!boxId) {
+      if (boxId == null || boxId == undefined) {
         showError("No active boxes found for this wallet.");
         return;
       }

@@ -67,7 +67,7 @@ function Orders({ tableData }) {
 
   const isConnected = useSelector((state) => state.user.isConnected);
   const contractAddress = useSelector((state) => state.user.contractAddress);
-  const account = useSelector((state) => state.user.walletAddress);
+  // const account = useSelector((state) => state.user.walletAddress);
 
   async function fetchTableData() {
     const provider = new ethers.JsonRpcProvider(
@@ -164,7 +164,7 @@ function Orders({ tableData }) {
         </div>
       )}
 
-      {isConnected && (
+      {/* {isConnected && (
         <div className="mt-10 bg-gradient-to-b from-[#13263c] to-[#1d3d55] max-w-7xl mx-auto px-4 py-4 rounded-lg">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 text-white font-semibold">
             <span className="text-base md:text-lg font-bold">
@@ -189,7 +189,7 @@ function Orders({ tableData }) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

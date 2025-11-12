@@ -77,6 +77,21 @@ function FriendAddress({ stats }) {
               <div className="flex flex-col">
                 <span className="text-2xl font-bold">
                   {" "}
+                  {stats[1] ? Math.floor(stats[1]) : "0"}
+                </span>
+                <span className="text-sm text-gray-300 font-bold">
+                  Team Size
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
+              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
+                <TiGroup />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">
+                  {" "}
                   {stats[0] ? Math.floor(stats[2]) : "0"}
                 </span>
                 <span className="text-sm text-gray-300 font-bold">
@@ -120,6 +135,7 @@ function FriendAddress({ stats }) {
               </div>
             </div>
 
+
             <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
               <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
                 <FaShareAltSquare />
@@ -142,10 +158,24 @@ function FriendAddress({ stats }) {
               <div className="flex flex-col">
                 <span className="text-2xl font-bold">
                   {" "}
-                  {stats[0] ? parseFloat(stats[6]).toFixed(2) : "0.00"}
+                  {stats[0] ? parseFloat(stats[6]).toFixed(4) : "0.00"}
                 </span>
                 <span className="text-sm text-gray-300 font-bold">
                   Sharing Benefits
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
+              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
+                <RiExchangeBoxLine />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">
+                  {" "}0.00
+                </span>
+                <span className="text-sm text-gray-300 font-bold">
+                  Special Sponsor Reward
                 </span>
               </div>
             </div>

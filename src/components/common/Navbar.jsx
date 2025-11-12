@@ -30,6 +30,7 @@ const Navbar = ({ showModal }) => {
   const isSaving = location.pathname === "/saving";
   const isSavingTotal = location.pathname === "/saving/total";
   const isSavingForm = location.pathname === "/saving/form"
+  const isSavingOrder = location.pathname === "/saving/orders"
 
   function handleLogout() {
     dispatch(setAddress(null));
@@ -94,7 +95,7 @@ const Navbar = ({ showModal }) => {
           </Link>
           <Link
             to={referrer ? `/saving/` + referrer : "/saving"}
-            className={`${isSaving || isSavingTotal || isSavingForm
+            className={`${isSaving || isSavingTotal || isSavingForm || isSavingOrder
               ? "text-[#00FFFF]"
               : "hover:text-[#00FFFF]"
               } transition ease-in-out duration-300`}
