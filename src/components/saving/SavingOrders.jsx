@@ -32,18 +32,16 @@ function SavingOrders() {
         );
         const contract = new ethers.Contract(contractAddress, contractAbi, provider);
 
-        // ✅ 1. Get user box IDs
         const ids = await contract.getUserBoxIds(walletAddress);
         const parsedIds = ids.map((id) => Number(id));
 
-        // ✅ 2. Get all BoxStake details for those IDs
         const stakes = await Promise.all(
           parsedIds.map(async (id) => {
             const s = await contract.boxStakes(id);
             return {
               id,
               amount: Number(ethers.formatUnits(s.amount, 18)),
-              reward: 0, // Optional: calculate locally or fetch if contract supports it
+              reward: 0,
               timestamp: Number(s.startTime),
               user: s.owner,
               withdrawn: s.unstaked,
@@ -51,7 +49,7 @@ function SavingOrders() {
           })
         );
 
-        setTableData(stakes.reverse()); // show newest first
+        setTableData(stakes.reverse());
       } catch (error) {
         console.error("Error fetching orders:", error);
       } finally {
@@ -216,7 +214,7 @@ function SavingOrders() {
                 <th className="text-center">Start Time</th>
                 <th className="text-center">Last Claim</th>
                 <th className="text-center">Withdrawn</th>
-                <th className="text-center">Withdraw</th>
+                <th className="text-center">Unstake</th>
                 <th className="text-center">Claim</th>
               </tr>
             </thead>
@@ -234,11 +232,11 @@ function SavingOrders() {
                   <td className="text-center">{item.withdrawn ? "Yes" : "No"}</td>
                   <td className="">
                     <button disabled={loadingWithdraw && loadingId == index} onClick={() => handleWithdrawSubmit(item.id, index)} className="animated-gradient h-full font-semibold rounded-lg text-base px-4 cursor-pointer"
-                    >{loadingWithdraw && loadingId == index ? "Loading..." : "Withdraw"}</button>
+                    >{loadingWithdraw && loadingId == index ? "Unstacking..." : "Unstake"}</button>
                   </td>
                   <td className="">
                     <button disabled={loadingClaim && loadingClaimId == index} onClick={() => handleRewardSubmit(item.id, index)} className="animated-gradient h-full font-semibold rounded-lg text-base px-4 cursor-pointer"
-                    >{loadingClaim && loadingClaimId == index ? "Loading..." : "Claim"}</button>
+                    >{loadingClaim && loadingClaimId == index ? "Claiming..." : "Claim"}</button>
                   </td>
                 </tr>
               ))}
