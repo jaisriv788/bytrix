@@ -28,6 +28,7 @@ function normalizeTimestampToMs(raw) {
       }
     }
   } catch (e) {
+    console.log(e)
     // fallthrough
     v = String(raw);
   }
@@ -55,7 +56,7 @@ function CountdownTimer({ startTime, planId }) {
   const duration = plan?.duration || 0;
 
   // normalize raw provided timestamp to ms
-  const { ms: providedMs, guessedUnit } = normalizeTimestampToMs(startTime);
+  const { ms: providedMs } = normalizeTimestampToMs(startTime);
 
   // Two possible interpretations:
   // 1) providedMs is a start timestamp in ms -> endIfStart = providedMs + duration
@@ -96,6 +97,7 @@ function CountdownTimer({ startTime, planId }) {
     } else {
       chosenEnd = endIfStart;
       chosenRemaining = remainingIfStart;
+      console.log(chosenRemaining)
     }
   }
 
@@ -136,8 +138,8 @@ function CountdownTimer({ startTime, planId }) {
     remaining < 60 * 60 * 1000 // <1 hour
       ? "text-orange-400 border-orange-400/30"
       : remaining < 6 * 60 * 60 * 1000 // <6 hours
-      ? "text-yellow-300 border-yellow-300/30"
-      : "text-cyan-300 border-cyan-300/30";
+        ? "text-yellow-300 border-yellow-300/30"
+        : "text-cyan-300 border-cyan-300/30";
 
   return (
     <div

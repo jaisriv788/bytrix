@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import contractAbi from "../../contractAbi.json";
 import erc20Abi from "../../erc20Abi.json";
@@ -13,7 +13,7 @@ function Withdraw({ showModal, ref }) {
   const { showSuccess, showError } = useNotification();
 
   const isConnected = useSelector((state) => state.user.isConnected);
-  const walletAddress = useSelector((state) => state.user.walletAddress);
+  // const walletAddress = useSelector((state) => state.user.walletAddress);
   const USDTAddress = useSelector((state) => state.user.USDTAddress);
   const contractAddress = useSelector((state) => state.user.contractAddress);
   const companyWalletAddress = useSelector(

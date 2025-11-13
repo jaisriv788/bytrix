@@ -10,7 +10,6 @@ import { useParams } from "react-router";
 import { CircleQuestionMark } from "lucide-react";
 
 function Hero({ showModal, setUserStats, setData }) {
-  // ✅ Centralized default plans
   const defaultPlans = [
     { name: "12 Hours", clicked: true, percentage: 0.1, planId: 1, fees: 1, min: 1, max: 10 },
     { name: "1 Day", clicked: false, percentage: 0.3, planId: 2, fees: 1, min: 10, max: 250 },
@@ -47,14 +46,12 @@ function Hero({ showModal, setUserStats, setData }) {
 
   const { signer } = useEthers();
 
-  // 🔹 Calculate circulation amount
   useEffect(() => {
     const circulationAmount =
       parseFloat(amount || 0) + ((amount || 0) * selectedBox.percentage) / 100;
     setUsdtValue(circulationAmount);
   }, [amount, selectedBox]);
 
-  // 🔹 Fetch USDT balance & user stats
   useEffect(() => {
     const getPrice = async () => {
       try {
@@ -81,6 +78,7 @@ function Hero({ showModal, setUserStats, setData }) {
         );
         setUserStats(formattedStats);
       } catch (error) {
+        console.log(error)
         showError("Something went wrong while fetching the balance.");
       } finally {
         setBalanceLoading(false);
