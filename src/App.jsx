@@ -82,11 +82,11 @@ function App() {
 
       <Navbar showModal={visibility} />
       <Routes key={pathname}>
-        <Route path="/:ref?" element={<Home />} />
+        <Route path="/:ref?" element={<Home setShowModal={setShowModal} />} />
         <Route path="/loop/:ref?" element={<Pool showModal={visibility} />} />
         <Route path="/saving/:ref?" element={<Saving />} />
         <Route path="/saving/total/:ref?" element={<Total />} />
-        <Route path="/saving/form/:ref?" element={<Form showModal={visibility}/>} />
+        <Route path="/saving/form/:ref?" element={<Form showModal={visibility} />} />
         <Route path="/saving/orders/:ref?" element={<SavingOrders />} />
         <Route path="/lease/:ref?" element={<Lease showModal={visibility} />} />
         <Route
