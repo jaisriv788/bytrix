@@ -38,7 +38,7 @@ function Home({ setShowModal }) {
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-0"></div>
 
       {/* 🌌 Main Content */}
-      <div className="relative z-10 flex flex-col items-center text-center backdrop-blur-2xl border border-cyan-400/40 bg-white/10 shadow-[0_0_30px_rgba(0,191,255,0.3)] rounded-3xl px-8 py-12 max-w-3xl mx-auto">
+      <div className="relative z-0 flex flex-col items-center text-center backdrop-blur-2xl border border-cyan-400/40 bg-white/10 shadow-[0_0_30px_rgba(0,191,255,0.3)] rounded-3xl px-8 py-12 max-w-3xl mx-auto">
         <span
           style={{ animationDuration: "2.5s" }}
           className="bg-gradient-to-r from-[#00BFFF] to-[#00FFFF] text-5xl md:text-7xl lg:text-8xl animate-bounce font-extrabold text-transparent bg-clip-text "

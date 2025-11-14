@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import videoBg from "../../assets/v3.mp4";
 import { useSelector } from 'react-redux';
 import { ethers, formatUnits } from 'ethers';
-import contractAbi from "../../contractAbi.json";
+// import contractAbi from "../../contractAbi.json";
 import erc20Abi from "../../erc20Abi.json";
 import { useNotification } from '../../hooks/useNotification';
-import { CircleQuestionMark } from 'lucide-react';
+// import { CircleQuestionMark } from 'lucide-react';
 
 function Lease({ showModal }) {
     const defaultPlans = [
@@ -23,11 +23,10 @@ function Lease({ showModal }) {
     const [refetch, setRefetch] = useState(false);
     const [loading, setLoading] = useState(false);
     const [selectedBox, setSelectedBox] = useState(defaultPlans[0]);
-    const [usdtValue, setUsdtValue] = useState(0);
 
     const isConnected = useSelector((state) => state.user.isConnected);
     const USDTAddress = useSelector((state) => state.user.USDTAddress);
-    const contractAddress = useSelector((state) => state.user.contractAddress);
+    // const contractAddress = useSelector((state) => state.user.contractAddress);
     const walletAddress = useSelector((state) => state.user.walletAddress);
 
     const { showError } = useNotification();
@@ -74,9 +73,11 @@ function Lease({ showModal }) {
     };
 
     async function handleSubmit() {
-        console.log("hello")
+        console.log(amount, selectedBox)
+        setRefetch(false)
+        setLoading(false)
     }
-    
+
     return (
         <div className="relative min-h-screen flex flex-col gap-7 items-center justify-center overflow-hidden px-2">
             {/* 🎥 Background Video */}
@@ -111,70 +112,72 @@ function Lease({ showModal }) {
                     Lease
                 </span>
 
-                {/* Amount input */}
-                <div>
-                    <div className="flex justify-between mt-3">
-                        <span className="font-semibold">Amount</span>
-                        <span>
-                            <span className="text-gray-400">Balance</span>{" "}
-                            {balanceLoading ? "0.0000" : parseFloat(usdtBalance).toFixed(4)} -
-                            USDT
-                        </span>
-                    </div>
+                <div className="tabs tabs-border">
+                    <input type="radio" name="my_tabs_2" className="tab text-white hover:text-gray-300 transition ease-in-out duration-300" aria-label="Borrow" />
+                    <div className="tab-content"> {/* Amount input */}
+                        <div>
+                            <div className="flex justify-between mt-3">
+                                <span className="font-semibold">Borrow Amount</span>
+                                <span>
+                                    <span className="text-gray-400">Balance</span>{" "}
+                                    {balanceLoading ? "0.0000" : parseFloat(usdtBalance).toFixed(4)} -
+                                    USDT
+                                </span>
+                            </div>
 
-                    <div className="bg-slate-600 focus-within:bg-gradient-to-tr focus-within:from-[#00BFFF] focus-within:to-[#00FFFF] p-1 mt-2 rounded-xl">
-                        <div className="flex gap-2 px-2 bg-slate-600 rounded-lg items-center">
-                            <input
-                                value={amount}
-                                onChange={handleInputChange}
-                                disabled={loading}
-                                className="flex-1 border-none py-2.5 focus:outline-none text-lg focus:text-[#00FFFF] font-semibold bg-transparent"
-                                type="number"
-                                placeholder="Enter Amount"
-                            />
-                            <button
-                                onClick={() => {
-                                    let floored =
-                                        Math.floor(parseFloat(usdtBalance) * 10000) / 10000;
-                                    setAmount(floored.toFixed(4));
-                                }}
-                                className="bg-white h-fit text-black px-2 rounded cursor-pointer hover:bg-white/70 transition ease-in-out duration-300"
-                            >
-                                Max
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Duration options */}
-                <div>
-                    <div className="flex justify-between mt-3">
-                        <span className="font-semibold">Duration</span>
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-2">
-                        {dataBox.map((item, index) => (
-                            <div
-                                key={index}
-                                onClick={() => handleClick(index)}
-                                className={`p-1 min-w-25 ${item.clicked
-                                    ? "bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF]"
-                                    : "bg-slate-500"
-                                    } cursor-pointer rounded-full`}
-                            >
-                                <div
-                                    className={`px-3 py-2 font-semibold rounded-full text-center ${!item.clicked && "bg-slate-500"
-                                        }`}
-                                >
-                                    {item.name}
+                            <div className="bg-slate-600 focus-within:bg-gradient-to-tr focus-within:from-[#00BFFF] focus-within:to-[#00FFFF] p-1 mt-2 rounded-xl">
+                                <div className="flex gap-2 px-2 bg-slate-600 rounded-lg items-center">
+                                    <input
+                                        value={amount}
+                                        onChange={handleInputChange}
+                                        disabled={loading}
+                                        className="flex-1 border-none py-2.5 focus:outline-none text-lg focus:text-[#00FFFF] font-semibold bg-transparent"
+                                        type="number"
+                                        placeholder="Enter Borrow Amount"
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            let floored =
+                                                Math.floor(parseFloat(usdtBalance) * 10000) / 10000;
+                                            setAmount(floored.toFixed(4));
+                                        }}
+                                        className="bg-white h-fit text-black px-2 rounded cursor-pointer hover:bg-white/70 transition ease-in-out duration-300"
+                                    >
+                                        Max
+                                    </button>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
+                        </div>
 
-                {/* Fees & Buttons */}
-                <div className="mb-1">
-                    <div className="flex justify-between mt-3">
+                        {/* Duration options */}
+                        <div>
+                            <div className="flex justify-between mt-3">
+                                <span className="font-semibold">Duration</span>
+                            </div>
+                            <div className="flex flex-wrap justify-center gap-2">
+                                {dataBox.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => handleClick(index)}
+                                        className={`p-1 min-w-25 ${item.clicked
+                                            ? "bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF]"
+                                            : "bg-slate-500"
+                                            } cursor-pointer rounded-full`}
+                                    >
+                                        <div
+                                            className={`px-3 py-2 font-semibold rounded-full text-center ${!item.clicked && "bg-slate-500"
+                                                }`}
+                                        >
+                                            {item.name}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Fees & Buttons */}
+                        <div className="mb-1">
+                            {/* <div className="flex justify-between mt-3">
                         {dataBox.map(
                             (item, index) =>
                                 item.clicked && (
@@ -189,29 +192,84 @@ function Lease({ showModal }) {
                             </span>{" "}
                             - USDT
                         </span>
+                    </div> */}
+
+                            {isConnected ? (
+                                <button
+                                    onClick={handleSubmit}
+                                    disabled={!amount}
+                                    className="disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] mt-3 w-full py-2 rounded-full font-bold text-black/80 cursor-pointer hover:scale-103 hover:-translate-y-0.5 transition ease-in-out duration-200"
+                                >
+                                    Borrow
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => showModal(true)}
+                                    className="bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] mt-3 w-full py-2 rounded-full font-bold text-black/90 cursor-pointer hover:scale-103 hover:-translate-y-0.5 transition ease-in-out duration-200"
+                                >
+                                    Connect Wallet
+                                </button>
+                            )}
+
+                            {loading && (
+                                <div className="text-center mt-3 font-bold text-red-400">
+                                    Please Do Not Close The Tab!
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    {isConnected ? (
-                        <button
-                            onClick={handleSubmit}
-                            className="disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] mt-3 w-full py-2 rounded-full font-bold text-black/80 cursor-pointer hover:scale-103 hover:-translate-y-0.5 transition ease-in-out duration-200"
-                        >
-                            Submit
-                        </button>
-                    ) : (
-                        <button
-                            onClick={() => showModal(true)}
-                            className="bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] mt-3 w-full py-2 rounded-full font-bold text-black/90 cursor-pointer hover:scale-103 hover:-translate-y-0.5 transition ease-in-out duration-200"
-                        >
-                            Connect Wallet
-                        </button>
-                    )}
-
-                    {loading && (
-                        <div className="text-center mt-3 font-bold text-red-400">
-                            Please Do Not Close The Tab!
+                    <input type="radio" name="my_tabs_2" className="tab text-white hover:text-gray-300 transition ease-in-out duration-300" aria-label="Pay" defaultChecked />
+                    <div className="tab-content"> {/* Amount input */}
+                        <div>
+                            <div className="bg-slate-600 focus-within:bg-gradient-to-tr focus-within:from-[#00BFFF] focus-within:to-[#00FFFF] p-1 mt-2 rounded-xl">
+                                <div className="flex gap-2 px-2 bg-slate-600 rounded-lg items-center">
+                                    <input
+                                        value={amount}
+                                        onChange={handleInputChange}
+                                        disabled={loading}
+                                        className="flex-1 border-none py-2.5 focus:outline-none text-lg focus:text-[#00FFFF] font-semibold bg-transparent"
+                                        type="number"
+                                        placeholder="Enter Returning Amount"
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            let floored =
+                                                Math.floor(parseFloat(usdtBalance) * 10000) / 10000;
+                                            setAmount(floored.toFixed(4));
+                                        }}
+                                        className="bg-white h-fit text-black px-2 rounded cursor-pointer hover:bg-white/70 transition ease-in-out duration-300"
+                                    >
+                                        Max
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    )}
+                        <div className="mb-1">
+                            {isConnected ? (
+                                <button
+                                    onClick={handleSubmit}
+                                    disabled={!amount}
+                                    className="disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] mt-3 w-full py-2 rounded-full font-bold text-black/80 cursor-pointer hover:scale-103 hover:-translate-y-0.5 transition ease-in-out duration-200"
+                                >
+                                    Pay
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => showModal(true)}
+                                    className="bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] mt-3 w-full py-2 rounded-full font-bold text-black/90 cursor-pointer hover:scale-103 hover:-translate-y-0.5 transition ease-in-out duration-200"
+                                >
+                                    Connect Wallet
+                                </button>
+                            )}
+
+                            {loading && (
+                                <div className="text-center mt-3 font-bold text-red-400">
+                                    Please Do Not Close The Tab!
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -26,7 +26,7 @@ function SavingBox() {
         const ids = await contract.getUserBoxIds(walletAddress);
         // console.log("ids",ids);
         const parsedIds = ids.map(id => Number(id));
-        console.log("User Box IDs:", parsedIds);
+        // console.log("User Box IDs:", parsedIds);
 
 
         const stakes = await Promise.all(
@@ -43,7 +43,7 @@ function SavingBox() {
           })
         );
 
-        console.log("Box Stakes:", stakes);
+        // console.log("Box Stakes:", stakes);
       } catch (err) {
         console.error(err);
         showError("Failed to load user boxes");

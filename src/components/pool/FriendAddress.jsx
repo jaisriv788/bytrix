@@ -17,7 +17,6 @@ function FriendAddress({ stats }) {
   //   { title: "11th-17th generation", value: 0 },
   // ]);
 
-  console.log(stats)
   return (
     <div
       style={{
