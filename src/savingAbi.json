@@ -1,284 +1,529 @@
 [
   {
-    "inputs": [
-      { "internalType": "address", "name": "_usdt", "type": "address" }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
+    "type": "constructor",
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "boxId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "name": "_usdt",
+        "type": "address",
+        "internalType": "address"
       }
     ],
+    "stateMutability": "nonpayable"
+  },
+  {
     "name": "BoxInterestClaimed",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
+    "type": "event",
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
         "name": "user",
-        "type": "address"
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "boxId",
-        "type": "uint256"
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
+    "anonymous": false
+  },
+  {
     "name": "BoxStakeCreated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
+    "type": "event",
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
         "name": "user",
-        "type": "address"
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "boxId",
-        "type": "uint256"
-      },
-      {
+        "type": "uint256",
         "indexed": false,
-        "internalType": "uint256",
-        "name": "principal",
-        "type": "uint256"
-      }
-    ],
-    "name": "BoxUnstaked",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "boxId", "type": "uint256" }
-    ],
-    "name": "claimBoxInterest",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "internalType": "address", "name": "referrer", "type": "address" }
-    ],
-    "name": "investSaving",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
+        "internalType": "uint256"
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "level",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
+    "anonymous": false
+  },
+  {
+    "name": "BoxUnstaked",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "boxId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "principal",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
     "name": "ReferralPaid",
-    "type": "event"
-  },
-  {
+    "type": "event",
     "inputs": [
-      { "internalType": "uint256", "name": "minA", "type": "uint256" },
-      { "internalType": "uint256", "name": "maxA", "type": "uint256" },
-      { "internalType": "uint256", "name": "fee", "type": "uint256" },
-      { "internalType": "uint256", "name": "bps", "type": "uint256" },
-      { "internalType": "uint256", "name": "dur", "type": "uint256" },
-      { "internalType": "bool", "name": "daily", "type": "bool" }
+      {
+        "name": "from",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "to",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "level",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
     ],
-    "name": "setPlan0",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "anonymous": false
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "boxId", "type": "uint256" }
-    ],
-    "name": "unstakeBox",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "amt", "type": "uint256" }],
-    "name": "withdrawUSDT",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "BOX_MIN_STAKE_SECONDS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "boxStakes",
+    "type": "function",
+    "inputs": [],
     "outputs": [
-      { "internalType": "address", "name": "owner", "type": "address" },
-      { "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "internalType": "uint256", "name": "startTime", "type": "uint256" },
-      { "internalType": "uint256", "name": "lastClaimTime", "type": "uint256" },
-      { "internalType": "bool", "name": "unstaked", "type": "bool" }
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "view"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "levelPercents",
-    "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "levelThresholds",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "nextBoxId",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "PERCISION",
-    "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "personalCirculation",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "personalReturns",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
-    "name": "plans",
-    "outputs": [
-      { "internalType": "uint256", "name": "minAmount", "type": "uint256" },
-      { "internalType": "uint256", "name": "maxAmount", "type": "uint256" },
-      { "internalType": "uint256", "name": "fee", "type": "uint256" },
-      { "internalType": "uint256", "name": "percentBps", "type": "uint256" },
-      { "internalType": "uint256", "name": "duration", "type": "uint256" },
-      { "internalType": "bool", "name": "isDaily", "type": "bool" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "sharingBenefits",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
+    "type": "function",
     "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint16",
+        "internalType": "uint16"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
     "name": "USDT",
+    "type": "function",
+    "inputs": [],
     "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IERC20"
+      }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "view"
   },
   {
+    "name": "boxStakes",
+    "type": "function",
     "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ],
-    "name": "userBoxIds",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
+    "outputs": [
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "startTime",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "lastClaimTime",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "unstaked",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "users",
-    "outputs": [
-      { "internalType": "address", "name": "referrer", "type": "address" },
-      { "internalType": "uint256", "name": "savingTotal", "type": "uint256" },
-      { "internalType": "uint256", "name": "registerTime", "type": "uint256" }
+    "name": "claimBoxInterest",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "boxId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "getUserBoxIds",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "investSaving",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "referrer",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "levelPercents",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint16",
+        "internalType": "uint16"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "levelThresholds",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "nextBoxId",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "owner",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "personalCirculation",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "personalReturns",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "plans",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "minAmount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxAmount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "fee",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "percentBps",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "duration",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "isDaily",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "setPlan0",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "minA",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxA",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "fee",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "bps",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "dur",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "daily",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "sharingBenefits",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "unstakeBox",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "boxId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "name": "userBoxIds",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "users",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "referrer",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "savingTotal",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "registerTime",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "withdrawUSDT",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "amt",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
   }
 ]

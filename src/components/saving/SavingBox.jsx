@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import contractAbi from "../../contractAbi.json";
+import contractAbi from "../../savingAbi.json";
 import { ethers, } from "ethers";
 import { FaCircleChevronRight } from "react-icons/fa6";
 import { useNavigate } from "react-router";
@@ -12,7 +12,7 @@ function SavingBox() {
 
   const isConnected = useSelector((state) => state.user.isConnected);
   const walletAddress = useSelector((state) => state.user.walletAddress);
-  const contractAddress = useSelector((state) => state.user.contractAddress);
+  const contractAddress = useSelector((state) => state.user.savingContractAddress);
   const referrer = useSelector((state) => state.user.referrer)
 
 
@@ -43,7 +43,7 @@ function SavingBox() {
           })
         );
 
-        // console.log("Box Stakes:", stakes);
+        console.log("Box Stakes:", stakes);
       } catch (err) {
         console.error(err);
         showError("Failed to load user boxes");

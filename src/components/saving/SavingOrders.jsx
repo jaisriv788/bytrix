@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ethers } from "ethers";
-import contractAbi from "../../contractAbi.json";
+import contractAbi from "../../savingAbi.json";
 import useEthers from "../../hooks/useEthers";
 import { useNotification } from "../../hooks/useNotification";
 
 function SavingOrders() {
   const isConnected = useSelector((state) => state.user.isConnected);
   const walletAddress = useSelector((state) => state.user.walletAddress);
-  const contractAddress = useSelector((state) => state.user.contractAddress);
+  const contractAddress = useSelector((state) => state.user.savingContractAddress);
 
   const { signer } = useEthers();
   const { showSuccess, showError } = useNotification();
@@ -34,10 +34,11 @@ function SavingOrders() {
 
         const ids = await contract.getUserBoxIds(walletAddress);
         const parsedIds = ids.map((id) => Number(id));
-
+        console.log({parsedIds})
         const stakes = await Promise.all(
           parsedIds.map(async (id) => {
             const s = await contract.boxStakes(id);
+            console.log(s)
             return {
               id,
               amount: Number(ethers.formatUnits(s.amount, 18)),
@@ -48,7 +49,7 @@ function SavingOrders() {
             };
           })
         );
-
+        console.log({ stakes })
         setTableData(stakes.reverse());
       } catch (error) {
         console.error("Error fetching orders:", error);
