@@ -9,11 +9,10 @@ import { useNotification } from '../../hooks/useNotification';
 
 function Lease({ showModal }) {
     const defaultPlans = [
-        { name: "12 Hours", clicked: true, percentage: 0.1, planId: 1, fees: 1, min: 1, max: 10 },
-        { name: "1 Day", clicked: false, percentage: 0.3, planId: 2, fees: 1, min: 10, max: 250 },
-        { name: "7 Days", clicked: false, percentage: 3, planId: 3, fees: 1, min: 50, max: 1000 },
-        { name: "14 Days", clicked: false, percentage: 7.5, planId: 4, fees: 1, min: 50, max: 5000 },
-        { name: "30 Days", clicked: false, percentage: 20, planId: 5, fees: 1, min: 100, max: 10000 },
+        { name: "1 Day", clicked: true, percentage: 0.3, planId: 1, fees: 1, min: 10, max: 250 },
+        { name: "7 Days", clicked: false, percentage: 3, planId: 2, fees: 1, min: 50, max: 1000 },
+        { name: "15 Days", clicked: false, percentage: 7.5, planId: 3, fees: 1, min: 50, max: 5000 },
+        { name: "30 Days", clicked: false, percentage: 20, planId: 4, fees: 1, min: 100, max: 10000 },
     ];
 
     const [dataBox, setDataBox] = useState(defaultPlans);
@@ -113,7 +112,7 @@ function Lease({ showModal }) {
                 </span>
 
                 <div className="tabs tabs-border">
-                    <input type="radio" name="my_tabs_2" className="tab text-white hover:text-gray-300 transition ease-in-out duration-300" aria-label="Borrow" />
+                    <input type="radio" name="my_tabs_2" className="tab text-white hover:text-gray-300 transition ease-in-out duration-300" aria-label="Borrow" defaultChecked />
                     <div className="tab-content"> {/* Amount input */}
                         <div>
                             <div className="flex justify-between mt-3">
@@ -219,7 +218,7 @@ function Lease({ showModal }) {
                         </div>
                     </div>
 
-                    <input type="radio" name="my_tabs_2" className="tab text-white hover:text-gray-300 transition ease-in-out duration-300" aria-label="Pay" defaultChecked />
+                    <input type="radio" name="my_tabs_2" className="tab text-white hover:text-gray-300 transition ease-in-out duration-300" aria-label="Pay" />
                     <div className="tab-content"> {/* Amount input */}
                         <div>
                             <div className="bg-slate-600 focus-within:bg-gradient-to-tr focus-within:from-[#00BFFF] focus-within:to-[#00FFFF] p-1 mt-2 rounded-xl">
@@ -248,8 +247,8 @@ function Lease({ showModal }) {
                         <div className="mb-1">
                             {isConnected ? (
                                 <button
-                                    onClick={handleSubmit}
-                                    disabled={!amount}
+                                    // onClick={handleSubmit}
+                                    // disabled={!amount}
                                     className="disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] mt-3 w-full py-2 rounded-full font-bold text-black/80 cursor-pointer hover:scale-103 hover:-translate-y-0.5 transition ease-in-out duration-200"
                                 >
                                     Pay
