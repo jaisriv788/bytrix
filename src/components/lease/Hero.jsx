@@ -28,7 +28,7 @@ function Lease({ showModal, setReloadData }) {
     const [selectedBox, setSelectedBox] = useState(defaultPlans[0]);
 
     const isConnected = useSelector((state) => state.user.isConnected);
-    const USDTAddress = useSelector((state) => state.user.USDTAddress);
+    const BtxAddress = useSelector((state) => state.user.BtxAddress);
     const contractAddress = useSelector((state) => state.user.leaseConstractAddress);
     const walletAddress = useSelector((state) => state.user.walletAddress);
     const companyWalletAddress = useSelector(
@@ -46,7 +46,7 @@ function Lease({ showModal, setReloadData }) {
                     "https://data-seed-prebsc-1-s1.binance.org:8545/"
                 );
 
-                const contract = new ethers.Contract(USDTAddress, erc20Abi, provider);
+                const contract = new ethers.Contract(BtxAddress, erc20Abi, provider);
                 // const ctr = new ethers.Contract(contractAddress, contractAbi, provider);
 
                 const balance = await contract.balanceOf(walletAddress);
@@ -94,7 +94,7 @@ function Lease({ showModal, setReloadData }) {
             }
             setLoading(true);
 
-            const tokenContract = new ethers.Contract(USDTAddress, erc20Abi, signer);
+            const tokenContract = new ethers.Contract(BtxAddress, erc20Abi, signer);
             const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
             const planid = selectedBox?.planId;

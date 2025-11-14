@@ -43,7 +43,7 @@ function SavingBox() {
           })
         );
 
-        console.log("Box Stakes:", stakes);
+        // console.log("Box Stakes:", stakes);
       } catch (err) {
         console.error(err);
         showError("Failed to load user boxes");

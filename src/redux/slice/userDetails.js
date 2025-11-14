@@ -5,6 +5,7 @@ const initialState = {
   walletAddress: null,
   refresher: false,
   USDTAddress: "0xf78a55db9391e9b689734ba3e45c1c3a5535a857", //testnet
+  BtxAddress: "0xf78a55db9391e9b689734ba3e45c1c3a5535a857", //testnet
   contractAddress: "0xbFc2a31aF9ff26C3f698d262eE476Fd9DCE53730",
   savingContractAddress: "0xbD584e77a42d1eB313eF1488b7E3BfFA0F3048a9",
   leaseConstractAddress: "0x235394a7206719fd29fb4e0520db5822e65fc2a6",
