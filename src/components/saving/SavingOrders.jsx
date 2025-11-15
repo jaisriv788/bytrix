@@ -49,7 +49,7 @@ function SavingOrders() {
             };
           })
         );
-        // console.log({ stakes })
+        console.log({ stakes })
         setTableData(stakes.reverse());
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -235,12 +235,12 @@ function SavingOrders() {
                   </td>
                   <td className="text-center">{item.withdrawn ? "Yes" : "No"}</td>
                   <td className="">
-                    <button disabled={loadingWithdraw && loadingId == index} onClick={() => handleWithdrawSubmit(item.id, index)} className="animated-gradient h-full font-semibold rounded-lg text-base px-4 cursor-pointer"
-                    >{loadingWithdraw && loadingId == index ? "Unstacking..." : "Unstake"}</button>
+                    <button disabled={(loadingWithdraw && loadingId == index) || item?.withdrawn} onClick={() => handleWithdrawSubmit(item.id, index)} className="animated-gradient disabled:opacity-70 disabled:cursor-not-allowed h-full font-semibold rounded-lg text-base px-4 cursor-pointer"
+                    >{loadingWithdraw && loadingId == index ? "Unstacking..." : item?.withdrawn ? "Unstaked" : "Unstake"}</button>
                   </td>
                   <td className="">
-                    <button disabled={loadingClaim && loadingClaimId == index} onClick={() => handleRewardSubmit(item.id, index)} className="animated-gradient h-full font-semibold rounded-lg text-base px-4 cursor-pointer"
-                    >{loadingClaim && loadingClaimId == index ? "Claiming..." : "Claim"}</button>
+                    <button disabled={(loadingClaim && loadingClaimId == index) || item?.withdrawn} onClick={() => handleRewardSubmit(item.id, index)} className="animated-gradient disabled:opacity-70 disabled:cursor-not-allowed h-full font-semibold rounded-lg text-base px-4 cursor-pointer"
+                    >{loadingClaim && loadingClaimId == index ? "Claiming..." : item?.withdrawn ? "Claimed" : "Claim"}</button>
                   </td>
                 </tr>
               ))}

@@ -5,7 +5,7 @@ import erc20Abi from "../../erc20Abi.json";
 import useEthers from "../../hooks/useEthers";
 import { ethers, formatUnits } from "ethers";
 import { useNotification } from "../../hooks/useNotification";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 function Form({ showModal }) {
   const [loading, setLoading] = useState(false);
@@ -17,10 +17,11 @@ function Form({ showModal }) {
   const { showSuccess, showError } = useNotification();
 
   const { ref } = useParams();
+  const navigate = useNavigate();
 
   const isConnected = useSelector((state) => state.user.isConnected);
   const walletAddress = useSelector((state) => state.user.walletAddress);
-  const USDTAddress = useSelector((state) => state.user.USDTAddress);
+  const USDTAddress = useSelector((state) => state.user.BtxAddress);
   const contractAddress = useSelector((state) => state.user.savingContractAddress);
   const companyWalletAddress = useSelector(
     (state) => state.user.companyWalletAddress
@@ -85,11 +86,15 @@ function Form({ showModal }) {
       setLoading(true);
       const tokenContract = new ethers.Contract(USDTAddress, erc20Abi, signer);
       const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-      const value = ethers.parseUnits(amount, 18);
-      // const MaxUint256 = ethers.MaxUint256;
+
+      const feeIsApplicable = await contract.hasPaidPlan(walletAddress);
+      const amt = feeIsApplicable ? parseFloat(amount) + 5 : amount;
+
+      const value = ethers.parseUnits(amt.toString(), 18);
+
       const tx = await tokenContract.approve(contractAddress, value);
       await tx.wait();
-      console.log({value, referralAddress})
+      console.log({ value, referralAddress })
       const tx2 = await contract.investSaving(value, referralAddress, {
         gasLimit: 500000,
       });
@@ -97,6 +102,7 @@ function Form({ showModal }) {
 
       showSuccess(`Successfully invested ${amount} USDT into the Saving Box!`);
       setAmount("");
+      navigate("/saving/orders")
     } catch (error) {
       console.error(error);
       showError("Transaction failed.");

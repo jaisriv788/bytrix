@@ -178,7 +178,7 @@ export const Orders = ({ reloadData, setReloadData }) => {
                 <div className="flex flex-wrap justify-center gap-6 md:gap-8">
     {data.map((item, index) => {
         const plan = defaultPlans.find(p => p.planId === item.planId);
-        const receiving = item?.BtxAmount - (item?.BtxAmount * plan?.percentage / 100);
+        const receiving = item?.UsdtAmount + (item?.UsdtAmount * plan?.percentage / 100);
 
         return (
             <div
@@ -248,7 +248,7 @@ export const Orders = ({ reloadData, setReloadData }) => {
                 {/* Button */}
                 <button
                     disabled={item?.paid || clickedBtn}
-                    onClick={() => handleRepayment(item?.boxId, item?.UsdtAmount, index)}
+                    onClick={() => handleRepayment(item?.boxId, receiving, index)}
                     className={`
                         mt-6 w-full py-3 
                         rounded-xl font-bold 
