@@ -34,11 +34,11 @@ function SavingOrders() {
 
         const ids = await contract.getUserBoxIds(walletAddress);
         const parsedIds = ids.map((id) => Number(id));
-        console.log({parsedIds})
+        // console.log({parsedIds})
         const stakes = await Promise.all(
           parsedIds.map(async (id) => {
             const s = await contract.boxStakes(id);
-            console.log(s)
+            // console.log(s)
             return {
               id,
               amount: Number(ethers.formatUnits(s.amount, 18)),
@@ -49,7 +49,7 @@ function SavingOrders() {
             };
           })
         );
-        console.log({ stakes })
+        // console.log({ stakes })
         setTableData(stakes.reverse());
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -74,7 +74,7 @@ function SavingOrders() {
         return;
       }
 
-      console.log(typeof boxId, boxId);
+      // console.log(typeof boxId, boxId);
       setLoadingWithdraw(true);
       setLoadingId(i)
       const contract = new ethers.Contract(contractAddress, contractAbi, signer);
@@ -84,7 +84,7 @@ function SavingOrders() {
       const user = walletAddress.toLowerCase();
       const amount = ethers.formatUnits(stake.amount, 18);
       const lastClaimTime = Number(stake.lastClaimTime);
-      console.log({ amount, lastClaimTime })
+      // console.log({ amount, lastClaimTime })
       const unstaked = stake.unstaked;
       if (owner !== user) {
         showError("You are not the owner of this box.");
@@ -134,7 +134,7 @@ function SavingOrders() {
         return;
       }
 
-      console.log(typeof boxId);
+      // console.log(typeof boxId);
       setLoadingClaim(true);
       setLoadingClaimId(i)
       const contract = new ethers.Contract(contractAddress, contractAbi, signer);
@@ -164,7 +164,7 @@ function SavingOrders() {
       const dailyBps = 30;
       const PERCISION = 10000;
       const elapsed = now - lastClaimTime;
-      console.log(elapsed);
+      // console.log(elapsed);
       const interest = (amount * dailyBps * elapsed) / (PERCISION * 86400);
       //console.log("interest", (interest/1e18));
       if (interest <= 0) {

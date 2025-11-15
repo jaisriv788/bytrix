@@ -9,7 +9,7 @@ import { useParams } from 'react-router';
 import useEthers from '../../hooks/useEthers';
 // import { CircleQuestionMark } from 'lucide-react';
 
-function Lease({ showModal, setReloadData }) {
+function Lease({ showModal, setReloadData, reloadData }) {
     const defaultPlans = [
         { name: "1 Day", clicked: true, percentage: 2, planId: 1, fees: 1, min: 10, max: 250 },
         { name: "7 Days", clicked: false, percentage: 10, planId: 2, fees: 1, min: 50, max: 1000 },
@@ -63,7 +63,7 @@ function Lease({ showModal, setReloadData }) {
         };
 
         isConnected ? getPrice() : setUsdtBalance(0);
-    }, [isConnected, refetch]);
+    }, [isConnected, refetch, reloadData]);
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -118,6 +118,9 @@ function Lease({ showModal, setReloadData }) {
             setRefetch((prev) => !prev);
             setReloadData((prev) => !prev);
             setLoading(false)
+            setSelectedBox(defaultPlans[0])
+            handleClick(0)
+            setBorrowAmount("")
         }
     }
 
@@ -163,7 +166,7 @@ function Lease({ showModal, setReloadData }) {
                             <span>
                                 <span className="text-gray-400">Balance</span>{" "}
                                 {balanceLoading ? "0.0000" : parseFloat(usdtBalance).toFixed(4)} -
-                                USDT
+                                Btytrix
                             </span>
                         </div>
 
@@ -226,8 +229,8 @@ function Lease({ showModal, setReloadData }) {
                         <div>${borrowAmount * selectedBox.percentage / 100}</div>
                     </div>
                     <div className='flex justify-between mt-1'>
-                        <div>Total Amount</div>
-                        <div>${parseFloat(borrowAmount) + (borrowAmount * selectedBox.percentage / 100)}</div>
+                        <div>Total Returning Amount</div>
+                        <div>${(borrowAmount ? parseFloat(borrowAmount) : 0) + (borrowAmount * selectedBox.percentage / 100)}</div>
                     </div>
 
                     {/* Fees & Buttons */}

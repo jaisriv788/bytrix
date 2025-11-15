@@ -177,7 +177,7 @@ function Hero({ showModal, setUserStats, setData }) {
 
       const tx = await tokenContract.approve(contractAddress, value);
       await tx.wait();
-
+      // console.log(planid, originalAmount, refrealAddress)
       const tx2 = await contract.invest(planid, originalAmount, refrealAddress, {
         gasLimit: 500000,
       });
@@ -213,7 +213,7 @@ function Hero({ showModal, setUserStats, setData }) {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col gap-7 items-center justify-center overflow-hidden px-2">
+    <div className="relative min-h-screen flex flex-col gap-7 pb-15 items-center  overflow-hidden px-2">
       {/* 🎥 Background Video */}
       <video
         className="absolute top-0 left-0 w-full h-full object-cover z-0"
@@ -268,7 +268,7 @@ function Hero({ showModal, setUserStats, setData }) {
       )}
 
       {/* Title */}
-      <div className="flex font-bold text-3xl items-center gap-2 z-0">
+      <div className="flex font-bold mt-30 text-3xl items-center gap-2 z-0">
         <div className="w-15 h-15 flex items-center justify-center">
           <svg viewBox="0 0 200 200" className="w-full h-full">
             <circle cx="100" cy="100" r="90" fill="#00BFFF" />
@@ -377,6 +377,29 @@ function Hero({ showModal, setUserStats, setData }) {
           </div>
         </div>
 
+        <div className="flex justify-between mt-3">
+          <span className="font-semibold flex items-center gap-2 relative">
+            One Time Fees
+            <div className="group relative flex items-center">
+              <CircleQuestionMark
+                size={15}
+                className="cursor-pointer text-gray-300"
+              />
+              <div className="w-50 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-slate-800 text-white text-xs px-5 py-3 rounded-lg shadow-lg z-10">
+                This fee is only applicable when you are investing in the
+                selected plan for the first time.
+              </div>
+            </div>
+          </span>
+
+          <span>
+            <span className="text-gray-400 font-bold">
+              {selectedBox?.fees ? selectedBox.fees.toFixed(2) : "0.00"}
+            </span>{" "}
+            - USDT
+          </span>
+        </div>
+
         {/* Fees & Buttons */}
         <div className="mb-1">
           <div className="flex justify-between mt-3">
@@ -384,7 +407,7 @@ function Hero({ showModal, setUserStats, setData }) {
               (item, index) =>
                 item.clicked && (
                   <span key={index} className="font-semibold">
-                    {item.name}
+                    {item.name} (Total Receving Amount)
                   </span>
                 )
             )}
@@ -396,28 +419,7 @@ function Hero({ showModal, setUserStats, setData }) {
             </span>
           </div>
 
-          <div className="flex justify-between mt-3">
-            <span className="font-semibold flex items-center gap-2 relative">
-              One Time Fees
-              <div className="group relative flex items-center">
-                <CircleQuestionMark
-                  size={15}
-                  className="cursor-pointer text-gray-300"
-                />
-                <div className="w-50 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-slate-800 text-white text-xs px-5 py-3 rounded-lg shadow-lg z-10">
-                  This fee is only applicable when you are investing in the
-                  selected plan for the first time.
-                </div>
-              </div>
-            </span>
 
-            <span>
-              <span className="text-gray-400 font-bold">
-                {selectedBox?.fees ? selectedBox.fees.toFixed(2) : "0.00"}
-              </span>{" "}
-              - USDT
-            </span>
-          </div>
 
           {isConnected ? (
             <button

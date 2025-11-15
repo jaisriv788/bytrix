@@ -157,7 +157,7 @@ function FriendAddress({ stats }) {
               <div className="flex flex-col">
                 <span className="text-2xl font-bold">
                   {" "}
-                  {stats[0] ? parseFloat(stats[6]).toFixed(4) : "0.00"}
+                  {stats[0] ? parseFloat(stats[6]).toFixed(2) : "0.00"}
                 </span>
                 <span className="text-sm text-gray-300 font-bold">
                   Sharing Benefits

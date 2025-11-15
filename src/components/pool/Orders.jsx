@@ -229,7 +229,7 @@ function Orders({ tableData }) {
             </thead>
 
             <tbody className="text-[#e2e8f0] bg-gradient-to-b from-[#13263c] to-[#1d3d55] md:text-lg">
-              {data.map((item, index) => (
+              {data.reverse().map((item, index) => (
                 <tr
                   key={index}
                   className="hover:bg-[#1e3a5f]/60 transition-colors duration-200"

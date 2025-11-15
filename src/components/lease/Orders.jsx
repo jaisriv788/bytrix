@@ -2,19 +2,51 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import contractAbi from "../../leaseAbi.json";
+import useEthers from "../../hooks/useEthers";
+import { useNotification } from "../../hooks/useNotification";
+import erc20Abi from "../../erc20Abi.json";
 
-export const Orders = ({ reloadData }) => {
+export const Orders = ({ reloadData, setReloadData }) => {
     const isConnected = useSelector((state) => state.user.isConnected);
     const contractAddress = useSelector((state) => state.user.leaseConstractAddress);
     const walletAddress = useSelector((state) => state.user.walletAddress);
+    const USDTAddress = useSelector((state) => state.user.USDTAddress);
 
     const [data, setData] = useState([]);
+    const [clickedBtn, setClickedBtn] = useState(null)
+    const [balance, setBalance] = useState(0)
+    const { signer } = useEthers();
 
-    async function handleRepayment(id) {
+    const { showError, showSuccess } = useNotification();
+
+
+    async function handleRepayment(id, amount, i) {
         try {
+            if (parseFloat(balance) < parseFloat(amount)) {
+                showError("Insufficient Funds.");
+                return;
+            }
             console.log(id)
+            setClickedBtn(i)
+            const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+            const tokenContract = new ethers.Contract(USDTAddress, erc20Abi, signer);
+
+            const amt = ethers.parseUnits(amount.toString(), 18)
+
+            const tx = await tokenContract.approve(contractAddress, amt);
+            await tx.wait();
+
+            const tx2 = await contract.returnUSDT(id, {
+                gasLimit: 500000,
+            });
+            await tx2.wait();
+            showSuccess("Transaction Successful!");
+            setReloadData((prev) => !prev);
         } catch (error) {
+            showError("Transaction Failed");
             console.log("Error fetching data:", error);
+        } finally {
+            setClickedBtn(null)
         }
     }
 
@@ -24,25 +56,33 @@ export const Orders = ({ reloadData }) => {
                 "https://data-seed-prebsc-1-s1.binance.org:8545/"
             );
             const ctr = new ethers.Contract(contractAddress, contractAbi, provider);
+            const tokenContract = new ethers.Contract(USDTAddress, erc20Abi, provider);
 
+            const amt = await tokenContract.balanceOf(walletAddress)
+            const balance = ethers.formatEther(amt)
+            setBalance(balance)
+            // console.log({ balance })
             setData([]);
 
             const res = await ctr.getUserActiveLeases(walletAddress);
 
+            console.log(res)
             for (const item of res) {
                 const id = parseInt(item);
                 const leaseDetails = await ctr.getLease(id);
 
+                // console.log({ leaseDetails })
                 const formatedData = {
                     address: leaseDetails[0],
                     BtxAmount: Number(ethers.formatUnits(leaseDetails[1], 18)),
                     UsdtAmount: Number(ethers.formatUnits(leaseDetails[2], 18)),
                     borrowDate: new Date(Number(leaseDetails[3]) * 1000).toLocaleString(),
                     returningDate: new Date(Number(leaseDetails[4]) * 1000).toLocaleString(),
-                    boxId: Number(leaseDetails[5]),
-                    paid: leaseDetails[6]
+                    planId: Number(leaseDetails[5]),
+                    paid: leaseDetails[6],
+                    boxId: Number(item)
                 }
-
+                console.log(formatedData)
                 setData((prev) => [...prev, formatedData]);
             }
         } catch (error) {
@@ -104,14 +144,15 @@ export const Orders = ({ reloadData }) => {
 
                             {/* Button */}
                             <button
-                                disabled={item?.paid}
-                                onClick={() => { handleRepayment(item?.boxId) }}
+                                disabled={item?.paid || clickedBtn}
+                                onClick={() => { handleRepayment(item?.boxId, item?.UsdtAmount, index) }}
                                 className={`
                                     mt-7 w-full py-3 
                                     rounded-2xl font-bold 
                                     transition-all duration-300 
                                     shadow-lg 
                                     bg-gradient-to-r cursor-pointer
+                                    disabled:cursor-not-allowed
                                     ${item?.paid
                                         ? "from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600"
                                         : "from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
@@ -119,7 +160,7 @@ export const Orders = ({ reloadData }) => {
                                     text-black
                                 `}
                             >
-                                {item?.paid ? "Paid" : "Pay Now"}
+                                {index === clickedBtn ? <span className="loading loading-spinner loading-md"></span> : "Pay Now"}
                             </button>
                         </div>
                     ))}
