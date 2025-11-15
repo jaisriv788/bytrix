@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import contractAbi from "../../contractAbi.json";
+import contractAbi from "../../savingAbi.json";
 import erc20Abi from "../../erc20Abi.json";
 import useEthers from "../../hooks/useEthers";
 import { ethers } from "ethers";
@@ -18,7 +18,7 @@ function Form({ showModal }) {
   const isConnected = useSelector((state) => state.user.isConnected);
   const walletAddress = useSelector((state) => state.user.walletAddress);
   const USDTAddress = useSelector((state) => state.user.USDTAddress);
-  const contractAddress = useSelector((state) => state.user.contractAddress);
+  const contractAddress = useSelector((state) => state.user.savingContractAddress);
   const companyWalletAddress = useSelector(
     (state) => state.user.companyWalletAddress
   );
@@ -59,7 +59,7 @@ function Form({ showModal }) {
       const MaxUint256 = ethers.MaxUint256;
       const tx = await tokenContract.approve(contractAddress, value);
       await tx.wait();
-      const tx2 = await contract.invest(0, value, referralAddress, {
+      const tx2 = await contract.investSaving(value, referralAddress, {
         gasLimit: 300000,
       });
       await tx2.wait();
