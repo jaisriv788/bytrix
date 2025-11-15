@@ -8,7 +8,7 @@ const initialState = {
   BtxAddress: "0x623A217Ad73C4E3C150A407100dFEdC775566657", //testnet
   contractAddress: "0x55D6F7900E7f09a0A31Be7c75E3516708B59D120",
   savingContractAddress: "0xc8db1BB544342FDb0f5C3Ec8B10db7e0757181df",
-  leaseConstractAddress: "0xeaf436bE0A65747CCdbE25a07E80fB1F5AF04C05",
+  leaseConstractAddress: "0x68F4b53E6827D077C19A16e8c3c0B6e38e9be0Fd",
   companyWalletAddress: "0x6Fdd0f90e8D74e876c59FC24d044E9f2bAE13b53",
   referrer: "",
 };

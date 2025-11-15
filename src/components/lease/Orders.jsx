@@ -6,6 +6,13 @@ import useEthers from "../../hooks/useEthers";
 import { useNotification } from "../../hooks/useNotification";
 import erc20Abi from "../../erc20Abi.json";
 
+const defaultPlans = [
+    { percentage: 2, planId: 1 },
+    { percentage: 10, planId: 2 },
+    { percentage: 20, planId: 3 },
+    { percentage: 36, planId: 4 },
+];
+
 export const Orders = ({ reloadData, setReloadData }) => {
     const isConnected = useSelector((state) => state.user.isConnected);
     const contractAddress = useSelector((state) => state.user.leaseConstractAddress);
@@ -66,7 +73,7 @@ export const Orders = ({ reloadData, setReloadData }) => {
 
             const res = await ctr.getUserActiveLeases(walletAddress);
 
-            console.log(res)
+            // console.log(res)
             for (const item of res) {
                 const id = parseInt(item);
                 const leaseDetails = await ctr.getLease(id);
@@ -82,7 +89,7 @@ export const Orders = ({ reloadData, setReloadData }) => {
                     paid: leaseDetails[6],
                     boxId: Number(item)
                 }
-                console.log(formatedData)
+                // console.log(formatedData)
                 setData((prev) => [...prev, formatedData]);
             }
         } catch (error) {
@@ -113,58 +120,158 @@ export const Orders = ({ reloadData, setReloadData }) => {
                     No Data Found
                 </div>
             ) : (
-                <div className="flex flex-wrap justify-evenly gap-10">
-                    {data.map((item, index) => (
-                        <div
-                            key={index}
-                            className="
-                                rounded-3xl p-7 
-                                backdrop-blur-xl 
-                                bg-gradient-to-br from-[#0afcb320] via-[#1da1ee20] to-[#0891e020]
-                                border border-cyan-400/30 
-                                shadow-[0_0_25px_#00eaff40] 
-                                text-white 
-                                transition-all duration-300 
-                                hover:scale-[1.04] 
-                                hover:shadow-[0_0_45px_#00eaff70]
-                            "
-                        >
-                            {/* Title */}
-                            <h2 className="text-xl font-bold mb-5 tracking-wide">
-                                Lease Summary
-                            </h2>
+                // <div className="flex flex-wrap justify-evenly gap-10">
+                //     {data.map((item, index) => (
+                //         <div
+                //             key={index}
+                //             className="
+                //                 rounded-3xl p-7 
+                //                 backdrop-blur-xl 
+                //                 bg-gradient-to-br from-[#0afcb320] via-[#1da1ee20] to-[#0891e020]
+                //                 border border-cyan-400/30 
+                //                 shadow-[0_0_25px_#00eaff40] 
+                //                 text-white 
+                //                 transition-all duration-300 
+                //                 hover:scale-[1.04] 
+                //                 hover:shadow-[0_0_45px_#00eaff70]
+                //             "
+                //         >
+                //             {/* Title */}
+                //             <h2 className="text-xl font-bold mb-5 tracking-wide">
+                //                 Lease Summary
+                //             </h2>
 
-                            {/* Info Fields */}
-                            <div className="space-y-3 text-sm text-gray-200">
-                                <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">BTX Amount:</span> ${item?.BtxAmount}</p>
-                                <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">USDT Amount:</span> ${item?.UsdtAmount}</p>
-                                <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">Borrow Date:</span> {item?.borrowDate}</p>
-                                <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">Returning Date:</span> {item?.returningDate}</p>
-                            </div>
+                //             {/* Info Fields */}
+                //             <div className="space-y-3 text-sm text-gray-200">
+                //                 <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">Id:</span> {item?.boxId}</p>
+                //                 <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">BTX Amount:</span> ${item?.BtxAmount}</p>
+                //                 <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">USDT Amount:</span> ${item?.UsdtAmount}</p>
+                //                 <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">Borrow Date:</span> {item?.borrowDate}</p>
+                //                 <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">Returning Date:</span> {item?.returningDate}</p>
+                //                 <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">Intrest Percentage:</span> {defaultPlans.find(p => p.planId === item.planId)?.percentage}%</p>
+                //                 <p className="flex justify-between gap-3 md:gap-10"><span className="font-semibold text-cyan-300">Receving Amount:</span> ${item?.BtxAmount - (item?.BtxAmount * defaultPlans.find(p => p.planId === item.planId)?.percentage / 100)}</p>
+                //             </div>
 
-                            {/* Button */}
-                            <button
-                                disabled={item?.paid || clickedBtn}
-                                onClick={() => { handleRepayment(item?.boxId, item?.UsdtAmount, index) }}
-                                className={`
-                                    mt-7 w-full py-3 
-                                    rounded-2xl font-bold 
-                                    transition-all duration-300 
-                                    shadow-lg 
-                                    bg-gradient-to-r cursor-pointer
-                                    disabled:cursor-not-allowed
-                                    ${item?.paid
-                                        ? "from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600"
-                                        : "from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
-                                    }
-                                    text-black
-                                `}
-                            >
-                                {index === clickedBtn ? <span className="loading loading-spinner loading-md"></span> : "Pay Now"}
-                            </button>
-                        </div>
-                    ))}
+                //             {/* Button */}
+                //             <button
+                //                 disabled={item?.paid || clickedBtn}
+                //                 onClick={() => { handleRepayment(item?.boxId, item?.UsdtAmount, index) }}
+                //                 className={`
+                //                     mt-7 w-full py-3 
+                //                     rounded-2xl font-bold 
+                //                     transition-all duration-300 
+                //                     shadow-lg 
+                //                     bg-gradient-to-r cursor-pointer
+                //                     disabled:cursor-not-allowed
+                //                     ${item?.paid
+                //                         ? "from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600"
+                //                         : "from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
+                //                     }
+                //                     text-black
+                //                 `}
+                //             >
+                //                 {index === clickedBtn ? <span className="loading loading-spinner loading-md"></span> : "Pay Now"}
+                //             </button>
+                //         </div>
+                //     ))}
+                // </div>
+                <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+    {data.map((item, index) => {
+        const plan = defaultPlans.find(p => p.planId === item.planId);
+        const receiving = item?.BtxAmount - (item?.BtxAmount * plan?.percentage / 100);
+
+        return (
+            <div
+                key={index}
+                className="
+                    rounded-3xl p-6
+                    backdrop-blur-xl 
+                    bg-gradient-to-br from-[#0afcb310] via-[#1da1ee15] to-[#0891e015]
+                    border border-cyan-400/40  
+                    shadow-[0_0_20px_#00eaff40]
+                    text-white 
+                    w-full max-w-sm
+                    transition-all duration-300 
+                    hover:scale-[1.03] hover:shadow-[0_0_40px_#00eaff80]
+                "
+            >
+                {/* Header */}
+                <div className="mb-4">
+                    <h2 className="text-xl font-bold tracking-wide text-cyan-200">
+                        Lease Summary
+                    </h2>
+                    <p className="text-xs text-gray-300 mt-1">
+                        ID #{item?.boxId}
+                    </p>
                 </div>
+
+                {/* Section 1 */}
+                <div className="bg-white/5 rounded-xl p-4 space-y-1 border border-white/10">
+                    <h3 className="text-sm text-cyan-300 font-semibold mb-1">Amounts</h3>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray-300">BTX Amount</span>
+                        <span>${item?.BtxAmount}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray-300">USDT Amount</span>
+                        <span>${item?.UsdtAmount}</span>
+                    </div>
+                </div>
+
+                {/* Section 2 */}
+                <div className="bg-white/5 rounded-xl p-4 mt-4 space-y-1 border border-white/10">
+                    <h3 className="text-sm text-cyan-300 font-semibold mb-1">Timeline</h3>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray-300">Borrow Date</span>
+                        <span>{item?.borrowDate}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray-300">Returning Date</span>
+                        <span>{item?.returningDate}</span>
+                    </div>
+                </div>
+
+                {/* Section 3 */}
+                <div className="bg-white/5 rounded-xl p-4 mt-4 space-y-1 border border-white/10">
+                    <h3 className="text-sm text-cyan-300 font-semibold mb-1">Financials</h3>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray-300">Interest</span>
+                        <span>{plan?.percentage}%</span>
+                    </div>
+
+                    <div className="flex justify-between text-sm font-semibold text-cyan-200 mt-1">
+                        <span>Final Receiving</span>
+                        <span>${receiving}</span>
+                    </div>
+                </div>
+
+                {/* Button */}
+                <button
+                    disabled={item?.paid || clickedBtn}
+                    onClick={() => handleRepayment(item?.boxId, item?.UsdtAmount, index)}
+                    className={`
+                        mt-6 w-full py-3 
+                        rounded-xl font-bold 
+                        transition-all duration-300 
+                        shadow-md 
+                        bg-gradient-to-r cursor-pointer
+                        disabled:cursor-not-allowed
+                        ${item?.paid
+                            ? "from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600"
+                            : "from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
+                        }
+                        text-black
+                    `}
+                >
+                    {index === clickedBtn
+                        ? <span className="loading loading-spinner loading-md"></span>
+                        : "Pay Now"}
+                </button>
+            </div>
+        );
+    })}
+</div>
+
             )}
         </div>
     );

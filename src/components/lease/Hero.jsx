@@ -221,16 +221,16 @@ function Lease({ showModal, setReloadData, reloadData }) {
                     </div>
 
                     <div className='flex justify-between mt-2'>
-                        <div>Intrest Percentage</div>
-                        <div>{selectedBox?.percentage}%</div>
+                        <div className='font-semibold'>Intrest Percentage</div>
+                        <div className='font-semibold'>{selectedBox?.percentage}%</div>
                     </div>
                     <div className='flex justify-between mt-1'>
                         <div>Intrest Amount</div>
                         <div>${borrowAmount * selectedBox.percentage / 100}</div>
                     </div>
                     <div className='flex justify-between mt-1'>
-                        <div>Total Returning Amount</div>
-                        <div>${(borrowAmount ? parseFloat(borrowAmount) : 0) + (borrowAmount * selectedBox.percentage / 100)}</div>
+                        <div>Total Receving Amount</div>
+                        <div>${(borrowAmount * 80 / 100)}</div>
                     </div>
 
                     {/* Fees & Buttons */}
