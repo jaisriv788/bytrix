@@ -62,7 +62,7 @@ function SavingOrders() {
   }, [isConnected, walletAddress]);
 
   const handleWithdrawSubmit = async (boxId, i) => {
-    const BOX_MIN_STAKE_SECONDS = 24 * 60 * 60;
+    // const BOX_MIN_STAKE_SECONDS = 24 * 60 * 60;
     try {
       if (!signer) {
         showError("Please connect your wallet first.");
@@ -82,8 +82,8 @@ function SavingOrders() {
       const stake = await contract.boxStakes(boxId);
       const owner = stake.owner.toLowerCase();
       const user = walletAddress.toLowerCase();
-      const amount = ethers.formatUnits(stake.amount, 18);
-      const lastClaimTime = Number(stake.lastClaimTime);
+      // const amount = ethers.formatUnits(stake.amount, 18);
+      // const lastClaimTime = Number(stake.lastClaimTime);
       // console.log({ amount, lastClaimTime })
       const unstaked = stake.unstaked;
       if (owner !== user) {
@@ -96,20 +96,22 @@ function SavingOrders() {
         setLoadingWithdraw(false);
         return;
       }
-      const startTime = Number(stake.startTime);
-      const now = Math.floor(Date.now() / 1000);
+      // const startTime = Number(stake.startTime);
+      // const now = Math.floor(Date.now() / 1000);
 
-      if (now < startTime + BOX_MIN_STAKE_SECONDS) {
-        const remaining = startTime + BOX_MIN_STAKE_SECONDS - now;
-        const hours = Math.floor(remaining / 3600);
-        const minutes = Math.floor((remaining % 3600) / 60);
-        const seconds = remaining % 60;
-        showError(`You can withdraw after 24 hours. Time remaining: ${hours}h ${minutes}m ${seconds}s`);
-        setLoadingWithdraw(false);
-        return;
-      }
+      // if (now < startTime + BOX_MIN_STAKE_SECONDS) {
+      //   const remaining = startTime + BOX_MIN_STAKE_SECONDS - now;
+      //   const hours = Math.floor(remaining / 3600);
+      //   const minutes = Math.floor((remaining % 3600) / 60);
+      //   const seconds = remaining % 60;
+      //   showError(`You can withdraw after 24 hours. Time remaining: ${hours}h ${minutes}m ${seconds}s`);
+      //   setLoadingWithdraw(false);
+      //   return;
+      // }
 
-      const tx = await contract.unstakeBox(boxId, { gasLimit: 300000 });
+      console.log("running the unstake fn")
+
+      const tx = await contract.unstakeBox(boxId, { gasLimit: 500000 });
       await tx.wait();
 
       showSuccess(`Interest claimed for box #${boxId}`);
@@ -156,11 +158,11 @@ function SavingOrders() {
         return;
       }
       const now = Math.floor(Date.now() / 1000);
-      if (now - lastClaimTime < 60) {
-        showError("Please wait before claiming interest again.");
-        setLoadingClaim(false);
-        return;
-      }
+      // if (now - lastClaimTime < 60) {
+      //   showError("Please wait before claiming interest again.");
+      //   setLoadingClaim(false);
+      //   return;
+      // }
       const dailyBps = 30;
       const PERCISION = 10000;
       const elapsed = now - lastClaimTime;
@@ -172,8 +174,8 @@ function SavingOrders() {
         setLoadingClaim(false);
         return;
       }
-
-      const tx = await contract.claimBoxInterest(boxId, { gasLimit: 300000 });
+      console.log("running the claim fn")
+      const tx = await contract.claimBoxInterest(boxId, { gasLimit: 500000 });
       await tx.wait();
 
       showSuccess(`Interest claimed for box #${boxId}`);
