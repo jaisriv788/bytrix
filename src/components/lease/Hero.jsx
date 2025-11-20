@@ -42,8 +42,11 @@ function Lease({ showModal, setReloadData, reloadData }) {
         const getPrice = async () => {
             try {
                 setBalanceLoading(true);
+                // const provider = new ethers.JsonRpcProvider(
+                //     "https://data-seed-prebsc-1-s1.binance.org:8545/"
+                // ); 
                 const provider = new ethers.JsonRpcProvider(
-                    "https://data-seed-prebsc-1-s1.binance.org:8545/"
+                    "https://rpc.anghscan.org/"
                 );
 
                 const contract = new ethers.Contract(BtxAddress, erc20Abi, provider);
@@ -67,6 +70,10 @@ function Lease({ showModal, setReloadData, reloadData }) {
 
     const handleInputChange = (e) => {
         const value = e.target.value;
+        if (value < 0) {
+            setBorrowAmount(0);
+            return
+        }
         setBorrowAmount(value);
     };
 
@@ -166,7 +173,7 @@ function Lease({ showModal, setReloadData, reloadData }) {
                             <span>
                                 <span className="text-gray-400">Balance</span>{" "}
                                 {balanceLoading ? "0.0000" : parseFloat(usdtBalance).toFixed(4)} -
-                                Btytrix
+                                BTRX
                             </span>
                         </div>
 

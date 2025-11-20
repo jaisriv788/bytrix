@@ -21,7 +21,12 @@ function SavingBox() {
       if (!isConnected || !walletAddress) return;
 
       try {
-        const provider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+        // const provider = new ethers.JsonRpcProvider(
+        //     "https://data-seed-prebsc-1-s1.binance.org:8545/"
+        // ); 
+        const provider = new ethers.JsonRpcProvider(
+          "https://rpc.anghscan.org/"
+        );
         const contract = new ethers.Contract(contractAddress, contractAbi, provider);
         const ids = await contract.getUserBoxIds(walletAddress);
         // console.log("ids",ids);

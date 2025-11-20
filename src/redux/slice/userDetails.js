@@ -4,12 +4,12 @@ const initialState = {
   isConnected: false,
   walletAddress: null,
   refresher: false,
-  USDTAddress: "0xf78a55db9391e9b689734ba3e45c1c3a5535a857", //testnet
-  BtxAddress: "0x623A217Ad73C4E3C150A407100dFEdC775566657", //testnet
-  contractAddress: "0x55D6F7900E7f09a0A31Be7c75E3516708B59D120", //testnet
-  savingContractAddress: "0xeC2424393e92F4d94D09933b757C7aBb0BB419e7", //testnet
-  leaseConstractAddress: "0x68F4b53E6827D077C19A16e8c3c0B6e38e9be0Fd", //testnet
-  companyWalletAddress: "0x6Fdd0f90e8D74e876c59FC24d044E9f2bAE13b53", //testnet
+  USDTAddress: "0xd1b7916d20F3b9D439B66AF25FC45f6A28c157d0",
+  BtxAddress: "0xcda698886c3Ab092531Ae8ce477eF46CD9cA4D9D",
+  contractAddress: "0x3cfD9D694A9D7464fD05125bac498B8e6e8Ac3eb", 
+  savingContractAddress: "0x7751cCef575C389FA44674e2fb51d2F755fF1543",
+  leaseConstractAddress: "0xBA44B2D68536035e6e019E68584570E3Ed084905",
+  companyWalletAddress: "0xcb79720f6c6155cd8e56f34da5bbc33ba6c53e8e",
   referrer: "",
 };
 

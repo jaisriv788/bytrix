@@ -56,8 +56,11 @@ function Hero({ showModal, setUserStats, setData }) {
     const getPrice = async () => {
       try {
         setBalanceLoading(true);
+        // const provider = new ethers.JsonRpcProvider(
+        //     "https://data-seed-prebsc-1-s1.binance.org:8545/"
+        // ); 
         const provider = new ethers.JsonRpcProvider(
-          "https://data-seed-prebsc-1-s1.binance.org:8545/"
+          "https://rpc.anghscan.org/"
         );
 
         const contract = new ethers.Contract(USDTAddress, erc20Abi, provider);

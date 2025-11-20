@@ -33,8 +33,11 @@ function Form({ showModal }) {
     const getPrice = async () => {
       try {
         setBalanceLoading(true);
+        // const provider = new ethers.JsonRpcProvider(
+        //     "https://data-seed-prebsc-1-s1.binance.org:8545/"
+        // ); 
         const provider = new ethers.JsonRpcProvider(
-          "https://data-seed-prebsc-1-s1.binance.org:8545/"
+          "https://rpc.anghscan.org/"
         );
 
         const contract = new ethers.Contract(USDTAddress, erc20Abi, provider);
@@ -128,7 +131,7 @@ function Form({ showModal }) {
                 disabled={loading}
                 className="flex-1 border-none py-2.5 focus:outline-none text-lg focus:text-[#00FFFF] font-semibold bg-transparent"
                 type="number"
-                placeholder="Enter amount (USDT)"
+                placeholder="Enter amount (BTRX)"
               />
             </div>
           </div>
@@ -138,7 +141,7 @@ function Form({ showModal }) {
             <span>
               <span className="text-gray-400">Balance</span>{" "}
               {balanceLoading ? "0.0000" : parseFloat(usdtBalance).toFixed(4)} -
-              USDT
+              BTRX
             </span>
           </div>
 
@@ -166,7 +169,6 @@ function Form({ showModal }) {
           )}
 
         </div>
-
       </div>
     </div>
   );

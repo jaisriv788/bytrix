@@ -17,7 +17,7 @@ function Home({ setShowModal }) {
 
   const handleCopy = () => {
     navigator.clipboard
-      .writeText(`http://localhost:5173/bytrix/${account}`)
+      .writeText(`https://bytrixone.com/${account}`)
       .then(() => alert("Referral Link Copied!"))
       .catch((e) => alert("Error Occurred", e));
   };
