@@ -98,20 +98,6 @@ function FriendAddress({ stats }) {
                 </span>
               </div>
             </div>
-
-            <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
-              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
-                <SiMoneygram />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-2xl font-bold">
-                  {stats[0] ? parseFloat(stats[3]).toFixed(2) : "0.00"}
-                </span>
-                <span className="text-sm text-gray-300 font-bold">
-                  Participation Amount
-                </span>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -119,22 +105,6 @@ function FriendAddress({ stats }) {
         <div className="flex-1 flex flex-col items-center">
           <span className="font-bold text-4xl sm:text-5xl mb-5">Personal</span>
           <div className="w-full bg-gradient-to-b from-[#13263c] to-[#1d3d55] flex-1 rounded-xl py-6 flex flex-col gap-4 shadow-md">
-            <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
-              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
-                <TfiTarget />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-2xl font-bold">
-                  {" "}
-                  {stats[0] ? parseFloat(stats[4]).toFixed(2) : "0.00"}
-                </span>
-                <span className="text-sm text-gray-300 font-bold">
-                  Personal Circulation
-                </span>
-              </div>
-            </div>
-
-
             <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
               <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
                 <FaShareAltSquare />
@@ -175,6 +145,42 @@ function FriendAddress({ stats }) {
                 </span>
                 <span className="text-sm text-gray-300 font-bold">
                   Special Sponsor Reward
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row max-w-4xl px-2 gap-6 mt-10 mx-auto">
+        <div className="flex-1 flex flex-col items-center">
+          <span className="font-bold text-4xl sm:text-5xl mb-5">My Investment</span>
+          <div className="flex flex-row w-full bg-gradient-to-b from-[#13263c] to-[#1d3d55] flex-1 rounded-xl py-6 flex flex-col gap-4 shadow-md">
+            <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
+              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
+                <TfiTarget />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">
+                  {" "}
+                  {stats[0] ? parseFloat(stats[4]).toFixed(2) : "0.00"}
+                </span>
+                <span className="text-sm text-gray-300 font-bold">
+                  Total Circulation
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
+              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
+                <SiMoneygram />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">
+                  {stats[0] ? parseFloat(stats[3]).toFixed(2) : "0.00"}
+                </span>
+                <span className="text-sm text-gray-300 font-bold">
+                  Active Circulation
                 </span>
               </div>
             </div>

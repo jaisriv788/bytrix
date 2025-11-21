@@ -180,7 +180,7 @@ function Hero({ showModal, setUserStats, setData }) {
 
       const tx = await tokenContract.approve(contractAddress, value);
       await tx.wait();
-      // console.log(planid, originalAmount, refrealAddress)
+      console.log(planid, originalAmount, refrealAddress)
       const tx2 = await contract.invest(planid, originalAmount, refrealAddress, {
         gasLimit: 500000,
       });
