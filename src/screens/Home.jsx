@@ -1,19 +1,62 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setReferrer } from "../redux/slice/userDetails";
 import videoBg from "../assets/v3.mp4";
 import { Copy } from "lucide-react";
+import { ethers, formatUnits } from "ethers";
+import contractAbi from "../contractAbi.json";
+import erc20Abi from "../erc20Abi.json";
 
 function Home({ setShowModal }) {
   const { ref } = useParams();
+
+  const [balanceLoading, setBalanceLoading] = useState(false);
+  const [usdtBalance, setUsdtBalance] = useState(0);
+  const [userStats, setUserStats] = useState(0);
+
   const account = useSelector((state) => state.user.walletAddress);
-  const isConnected = useSelector((state) => state.user.isConnected)
+  const isConnected = useSelector((state) => state.user.isConnected);
+  const USDTAddress = useSelector((state) => state.user.USDTAddress);
+  const contractAddress = useSelector((state) => state.user.contractAddress);
+  const companyWalletAddress = useSelector(
+    (state) => state.user.companyWalletAddress
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
     ref ? dispatch(setReferrer(ref)) : dispatch(setReferrer(""));
   }, [ref, dispatch]);
+
+  useEffect(() => { fetchData() }, [])
+  const fetchData = async () => {
+    try {
+      setBalanceLoading(true);
+      const provider = new ethers.JsonRpcProvider(
+        "https://rpc.anghscan.org/"
+      );
+      console.log(provider)
+      const contract = new ethers.Contract(USDTAddress, erc20Abi, provider);
+      const ctr = new ethers.Contract(contractAddress, contractAbi, provider);
+
+      const balance = await contract.balanceOf("0x3cfD9D694A9D7464fD05125bac498B8e6e8Ac3eb");
+      const decimals = await contract.decimals();
+      const formatted = formatUnits(balance, decimals);
+      console.log(formatted)
+      setUsdtBalance(formatted);
+
+      const data2 = await ctr.getUserStats(companyWalletAddress);
+      const formattedStats = data2.map((v, i) =>
+        i > 2 ? formatUnits(v, 18) : v.toString()
+      );
+      console.log(formattedStats)
+      setUserStats(formattedStats);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setBalanceLoading(false);
+    }
+  }
 
   const handleCopy = () => {
     navigator.clipboard
@@ -43,7 +86,7 @@ function Home({ setShowModal }) {
           style={{ animationDuration: "2.5s" }}
           className="bg-gradient-to-r from-[#00BFFF] to-[#00FFFF] text-5xl md:text-7xl lg:text-8xl animate-bounce font-extrabold text-transparent bg-clip-text "
         >
-          35,265,653
+          {balanceLoading ? "Loading..." : Math.round(parseFloat(usdtBalance))}
         </span>
 
         <div className="mt-2 text-xl font-semibold text-cyan-300 tracking-wide">

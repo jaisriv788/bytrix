@@ -167,6 +167,13 @@ function Hero({ showModal, setUserStats, setData }) {
       const tokenContract = new ethers.Contract(USDTAddress, erc20Abi, signer);
       const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
+      const referalDetail = await contract.users(refrealAddress);
+
+      if (referalDetail[3].toString() === "0") {
+        showError("Referral Account Is Not Active!");
+        return;
+      }
+
       const planid = selectedBox?.planId;
       const fee = selectedBox?.fees;
       const feeIsApplicable = await contract.hasPaidPlan(walletAddress, planid);
