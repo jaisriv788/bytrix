@@ -132,7 +132,7 @@ function Lease({ showModal, setReloadData, reloadData }) {
     }
 
     return (
-        <div className="relative min-h-screen flex flex-col gap-7 items-center justify-center overflow-hidden px-2">
+        <div className="relative min-h-screen flex flex-col gap-7 items-center justify-center overflow-hidden py-6 px-2">
             {/* 🎥 Background Video */}
             <video
                 className="absolute top-0 left-0 w-full h-full object-cover z-0"
@@ -145,18 +145,20 @@ function Lease({ showModal, setReloadData, reloadData }) {
 
             {/* Title */}
             <div className="flex font-bold text-3xl items-center gap-2 z-0">
-                <div className="w-15 h-15 flex items-center justify-center">
-                    <svg viewBox="0 0 200 200" className="w-full h-full">
+                <div className=" flex items-center justify-center">
+                    {/* <svg viewBox="0 0 200 200" className="w-full h-full">
                         <circle cx="100" cy="100" r="90" fill="#00BFFF" />
                         <polygon
                             points="100,30 65,100 115,100 70,170 130,105 85,105"
                             fill="#00FFFF"
                         />
-                    </svg>
+                    </svg> */}
+            <img src="/logo.png" alt="Logo" className="w-[200px] h-[150px] mt-[80px] " />
+
                 </div>
-                <span className="bg-gradient-to-r from-[#00BFFF] to-[#00FFFF] text-transparent bg-clip-text">
+                {/* <span className="bg-gradient-to-r from-[#00BFFF] to-[#00FFFF] text-transparent bg-clip-text">
                     Bytrix One
-                </span>
+                </span> */}
             </div>
 
             {/* Main Card */}

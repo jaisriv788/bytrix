@@ -1,5 +1,7 @@
 import Pool from "./screens/Pool";
 import Home from "./screens/Home";
+import Content from "./components/home/Content";
+
 import Saving from "./screens/Saving";
 import { Routes, Route, useLocation } from "react-router";
 import Navbar from "./components/common/Navbar";

@@ -17,6 +17,17 @@ function FriendAddress({ stats }) {
   //   { title: "11th-17th generation", value: 0 },
   // ]);
 
+
+//  let todayDate= Math.floor(Date.now() / 1000 / 86400);
+      
+//       const todayIncome = await ctr.getTodayIncomeLog(companyWalletAddress,todayDate);
+//       console.log(todayIncome);
+// const todayIncomeSum = Object.keys(todayIncome)
+//   .filter((k) => k >= 0 && k <= 3)
+//   .reduce((acc, k) => acc + todayIncome[k], 0n);
+
+// console.log(todayIncomeSum);
+
   return (
     <div
       style={{
@@ -152,7 +163,7 @@ function FriendAddress({ stats }) {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row max-w-4xl px-2 gap-6 mt-10 mx-auto">
+      {/* <div className="flex flex-col md:flex-row max-w-4xl px-2 gap-6 mt-10 mx-auto">
         <div className="flex-1 flex flex-col items-center">
           <span className="font-bold text-4xl sm:text-5xl mb-5">My Investment</span>
           <div className="flex flex-row w-full bg-gradient-to-b from-[#13263c] to-[#1d3d55] flex-1 rounded-xl py-6 flex flex-col gap-4 shadow-md">
@@ -186,7 +197,144 @@ function FriendAddress({ stats }) {
             </div>
           </div>
         </div>
+      </div> */}
+
+
+{/* My Incomes */}
+
+ {/* <div className="flex flex-col md:flex-row max-w-4xl px-2 gap-6 mt-10 mx-auto">
+        <div className="flex-1 flex flex-col items-center">
+          <span className="font-bold text-4xl sm:text-5xl mb-5">My Income</span>
+          <div className="flex flex-row w-full bg-gradient-to-b from-[#13263c] to-[#1d3d55] flex-1 rounded-xl py-6 flex flex-col gap-4 shadow-md">
+            <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
+              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
+                <TfiTarget />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">
+               000
+                </span>
+                <span className="text-sm text-gray-300 font-bold">
+                  Total Income
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-7 px-16 sm:px-20 md:px-24">
+              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-3xl">
+                <SiMoneygram />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold">
+                  0.00
+                </span>
+                <span className="text-sm text-gray-300 font-bold">
+                  Today Income
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> */}
+
+
+
+
+
+
+{/* My Investment */}
+<div className="max-w-4xl w-full px-4 mt-10 mx-auto">
+  <div className="flex flex-col items-center">
+    <span className="font-bold text-3xl sm:text-4xl md:text-5xl mb-5">
+      My Investment
+    </span>
+
+    <div className="w-full bg-gradient-to-b from-[#13263c] to-[#1d3d55] rounded-xl py-6 flex flex-col gap-6 shadow-md">
+
+      {/* Total Circulation */}
+      <div className="flex items-center gap-4 sm:gap-6 md:gap-7 px-4 sm:px-10 md:px-16">
+        <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center
+          rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-2xl sm:text-3xl">
+          <TfiTarget />
+        </div>
+
+        <div className="flex flex-col">
+          <span className="text-xl sm:text-2xl font-bold">
+            {stats[0] ? parseFloat(stats[4]).toFixed(2) : "0.00"}
+          </span>
+          <span className="text-xs sm:text-sm text-gray-300 font-bold">
+            Total Circulation
+          </span>
+        </div>
       </div>
+
+      {/* Active Circulation */}
+      <div className="flex items-center gap-4 sm:gap-6 md:gap-7 px-4 sm:px-10 md:px-16">
+        <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center
+          rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-2xl sm:text-3xl">
+          <SiMoneygram />
+        </div>
+
+        <div className="flex flex-col">
+          <span className="text-xl sm:text-2xl font-bold">
+            {stats[0] ? parseFloat(stats[3]).toFixed(2) : "0.00"}
+          </span>
+          <span className="text-xs sm:text-sm text-gray-300 font-bold">
+            Active Circulation
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{/* My Income */}
+<div className="max-w-4xl w-full px-4 mt-10 mx-auto">
+  <div className="flex flex-col items-center">
+    <span className="font-bold text-3xl sm:text-4xl md:text-5xl mb-5">
+      My Income
+    </span>
+
+    <div className="w-full bg-gradient-to-b from-[#13263c] to-[#1d3d55] rounded-xl py-6 flex flex-col gap-6 shadow-md">
+
+      {/* Total Income */}
+      <div className="flex items-center gap-4 sm:gap-6 md:gap-7 px-4 sm:px-10 md:px-16">
+        <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center
+          rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-2xl sm:text-3xl">
+          <TfiTarget />
+        </div>
+
+        <div className="flex flex-col">
+          <span className="text-xl sm:text-2xl font-bold">0.00</span>
+          <span className="text-xs sm:text-sm text-gray-300 font-bold">
+            Total Income
+          </span>
+        </div>
+      </div>
+
+      {/* Today Income */}
+      <div className="flex items-center gap-4 sm:gap-6 md:gap-7 px-4 sm:px-10 md:px-16">
+        <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center
+          rounded-full bg-gradient-to-tr from-[#00BFFF] to-[#00FFFF] text-white text-2xl sm:text-3xl">
+          <SiMoneygram />
+        </div>
+
+        <div className="flex flex-col">
+          <span className="text-xl sm:text-2xl font-bold">0.00</span>
+          <span className="text-xs sm:text-sm text-gray-300 font-bold">
+            Today Income
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 
       <div className="flex flex-col items-center mt-7">
         <div className="max-w-4xl lg:text-5xl sm:text-4xl text-xl font-bold text-center bg-gradient-to-br from-[#00BFFF] to-[#00FFFF] text-transparent bg-clip-text ">
