@@ -11,7 +11,7 @@ import { useNotification } from "../../hooks/useNotification";
 
 import gif from "../../assets/gif2.gif";
 import { useSelector } from "react-redux";
-import { ethers } from "ethers";
+import { ethers, formatEther } from "ethers";
 import contractAbi from "../../contractAbi.json";
 // import { formatUnits } from "ethers"
 
@@ -30,11 +30,11 @@ function FriendAddress({ stats }) {
 
   const isConnected = useSelector((state) => state.user.isConnected);
   const walletAddress = useSelector((state) => state.user.walletAddress);
-  const USDTAddress = useSelector((state) => state.user.USDTAddress);
+  // const USDTAddress = useSelector((state) => state.user.USDTAddress);
   const contractAddress = useSelector((state) => state.user.contractAddress);
-  const companyWalletAddress = useSelector(
-    (state) => state.user.companyWalletAddress
-  );
+  // const companyWalletAddress = useSelector(
+  //   (state) => state.user.companyWalletAddress
+  // );
 
   useEffect(() => {
     const getPrice = async () => {
@@ -42,18 +42,13 @@ function FriendAddress({ stats }) {
         const provider = new ethers.JsonRpcProvider("https://rpc.anghscan.org/");
         const ctr = new ethers.Contract(contractAddress, contractAbi, provider);
 
-        // const todayDate = Math.floor(Date.now() / 1000 / 86400);
+        const todayIndex = Math.floor(Date.now() / 1000 / 86400);
 
+        // console.log({ todayIndex });
 
-        const block = await provider.getBlock("latest");
-        const todayDate = Math.floor(block.timestamp / 86400);
-
-        console.log("Blockchain Today Date:", todayDate);
-
-        // ---- TODAY INCOME ----
         const todayLog = await ctr.getTodayIncomeLog(
-          companyWalletAddress,
-          todayDate
+          walletAddress,
+          todayIndex
         );
         console.log("Today Log:", todayLog);
 
@@ -61,7 +56,7 @@ function FriendAddress({ stats }) {
           .map(i => BigInt(todayLog[i] || 0))
           .reduce((a, b) => a + b, 0n);
 
-        const todayIncomeInt = Number(sum);
+        const todayIncomeInt = formatEther(sum);
 
         console.log("Today Income:", todayIncomeInt);
 
@@ -72,7 +67,7 @@ function FriendAddress({ stats }) {
           .map(Number)
           .reduce((a, b) => a + b, 0);
 
-        console.log("TotalSum:", totalSum);
+        // console.log("TotalSum:", totalSum);
         setTotalIncome(totalSum);
 
 
@@ -88,6 +83,147 @@ function FriendAddress({ stats }) {
       setTotalIncome(0);
     }
   }, [isConnected, stats]);
+
+  //   useEffect(() => {
+  //   const getPrice = async () => {
+  //     try {
+  //       const provider = new ethers.JsonRpcProvider("https://rpc.anghscan.org/");
+  //       const ctr = new ethers.Contract(contractAddress, contractAbi, provider);
+
+  //       const userAddr = ethers.getAddress(walletAddress);
+
+  //       // 1) Primary: compute today's dayIndex like contract
+  //       const todayIndex = Math.floor(Date.now() / 1000 / 86400);
+  //       console.log({ todayIndex });
+
+  //       // Try today and a few prior days (small lookback to catch UTC-edge logs)
+  //       const lookbackDays = 3;
+  //       let found = false;
+  //       for (let d = 0; d <= lookbackDays; d++) {
+  //         const dayToCheck = todayIndex - d;
+  //         if (dayToCheck < 0) break;
+  //         const todayLog = await ctr.getTodayIncomeLog(userAddr, dayToCheck);
+  //         // ethers v6 returns BigInt by default; however shape may be array-like:
+  //         const exists = todayLog.exists ?? todayLog[4] ?? false;
+  //         console.log("Checked day", dayToCheck, "exists:", exists, "raw:", todayLog);
+  //         if (exists) {
+  //           // read values (support both named props and tuple)
+  //           const ref = BigInt(todayLog.referralIncome ?? todayLog[0] ?? 0);
+  //           const mat = BigInt(todayLog.maturityIncome ?? todayLog[1] ?? 0);
+  //           const sin = BigInt(todayLog.singleIncome ?? todayLog[2] ?? 0);
+  //           const spo = BigInt(todayLog.sponsorIncome ?? todayLog[3] ?? 0);
+  //           const sum = ref + mat + sin + spo;
+  //           const todayIncomeInt = Number(sum); // if > Number.MAX_SAFE_INTEGER, use sum.toString()
+  //           setTodayIncome(todayIncomeInt);
+  //           found = true;
+  //           break;
+  //         }
+  //       }
+
+  //       // 2) Fallback: if not found, scan events to find most recent write block and try from there
+  //       if (!found) {
+  //         console.log("No income log found for recent days; scanning events as fallback...");
+
+  //         // event signatures
+  //         const sigReferral = ethers.id("ReferralPaid(address,address,uint256,uint256)");
+  //         const sigDepositProcessed = ethers.id("DepositProcessed(uint256,address,uint256)");
+  //         const sigSponsor = ethers.id("SponsorRewardPaid(address,string,uint256)");
+  //         const sigInvest = ethers.id("Invest(address,uint8,uint256,uint256)");
+
+  //         const addressTopic = (addr) => ethers.zeroPadValue(addr, 32);
+
+  //         // Collect logs where user appears in indexed position(s).
+  //         // ReferralPaid: topics [sig, from, to] -> user as 'to' => topic index 2
+  //         const logsReferral = await provider.getLogs({
+  //           fromBlock: 0,
+  //           toBlock: "latest",
+  //           address: contractAddress,
+  //           topics: [sigReferral, null, addressTopic(userAddr)]
+  //         }).catch(() => []);
+
+  //         // DepositProcessed: topics [sig, depositId, user] -> topic 2 is user
+  //         const logsDeposit = await provider.getLogs({
+  //           fromBlock: 0,
+  //           toBlock: "latest",
+  //           address: contractAddress,
+  //           topics: [sigDepositProcessed, null, addressTopic(userAddr)]
+  //         }).catch(() => []);
+
+  //         // SponsorRewardPaid: topics [sig, user] -> topic1 user
+  //         const logsSponsor = await provider.getLogs({
+  //           fromBlock: 0,
+  //           toBlock: "latest",
+  //           address: contractAddress,
+  //           topics: [sigSponsor, addressTopic(userAddr)]
+  //         }).catch(() => []);
+
+  //         // Invest: topics [sig, user] -> topic1 user
+  //         const logsInvest = await provider.getLogs({
+  //           fromBlock: 0,
+  //           toBlock: "latest",
+  //           address: contractAddress,
+  //           topics: [sigInvest, addressTopic(userAddr)]
+  //         }).catch(() => []);
+
+  //         const allLogs = [...logsReferral, ...logsDeposit, ...logsSponsor, ...logsInvest];
+  //         if (allLogs.length === 0) {
+  //           console.log("No relevant logs found; no income logs available on-chain for this user.");
+  //           setTodayIncome(0);
+  //         } else {
+  //           // pick most recent (largest blockNumber)
+  //           const lastLog = allLogs.reduce((a, b) => (Number(a.blockNumber) >= Number(b.blockNumber) ? a : b));
+  //           const block = await provider.getBlock(lastLog.blockNumber);
+  //           const writeDayIndex = Math.floor(Number(block.timestamp) / 86400);
+  //           console.log("Most recent write block:", lastLog.blockNumber, "ts:", Number(block.timestamp), "dayIndex:", writeDayIndex);
+
+  //           // check writeDayIndex and a few previous days
+  //           let found2 = false;
+  //           for (let d = 0; d <= 3 && !found2; d++) {
+  //             const day = writeDayIndex - d;
+  //             if (day < 0) break;
+  //             const l = await ctr.getTodayIncomeLog(userAddr, day);
+  //             const exists2 = l.exists ?? l[4] ?? false;
+  //             console.log("Checking day from event fallback:", day, "exists:", exists2);
+  //             if (exists2) {
+  //               const ref = BigInt(l.referralIncome ?? l[0] ?? 0);
+  //               const mat = BigInt(l.maturityIncome ?? l[1] ?? 0);
+  //               const sin = BigInt(l.singleIncome ?? l[2] ?? 0);
+  //               const spo = BigInt(l.sponsorIncome ?? l[3] ?? 0);
+  //               const sum = ref + mat + sin + spo;
+  //               setTodayIncome(Number(sum));
+  //               found2 = true;
+  //               break;
+  //             }
+  //           }
+  //           if (!found2) {
+  //             console.log("Fallback scan didn't find any income entries near last write. Setting 0.");
+  //             setTodayIncome(0);
+  //           }
+  //         }
+  //       }
+
+  //       // total income from stats (same as before)
+  //       if (stats) {
+  //         const totalSum = [stats[5], stats[6]]
+  //           .map(Number)
+  //           .reduce((a, b) => a + b, 0);
+  //         setTotalIncome(totalSum);
+  //       }
+
+  //     } catch (err) {
+  //       console.error("Something went wrong while fetching today income:", err);
+  //       showError("Something went wrong while fetching the balance.");
+  //     }
+  //   };
+
+  //   if (isConnected) {
+  //     getPrice();
+  //   } else {
+  //     setTodayIncome(0);
+  //     setTotalIncome(0);
+  //   }
+  // // include walletAddress if it can change
+  // }, [isConnected, stats, walletAddress]);
 
 
   return (
@@ -304,10 +440,7 @@ function FriendAddress({ stats }) {
 
               <div className="flex flex-col">
                 <span className="text-xl md:text-2xl font-bold">
-                  {Number(totalIncome).toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}
+                  {Number(totalIncome).toFixed(4)}
 
                 </span>
                 <span className="text-sm text-gray-300 font-bold">Total Income</span>
@@ -324,10 +457,7 @@ function FriendAddress({ stats }) {
 
               <div className="flex flex-col">
                 <span className="text-xl md:text-2xl font-bold">
-                  {Number(todayIncome).toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}
+                  {Number(todayIncome).toFixed(4)}
 
                 </span>
 
