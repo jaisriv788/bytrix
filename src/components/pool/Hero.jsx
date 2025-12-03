@@ -79,7 +79,9 @@ function Hero({ showModal, setUserStats, setData }) {
         const formattedStats = data2.map((v, i) =>
           i > 2 ? formatUnits(v, 18) : v.toString()
         );
+        // console.log("data2", data2);
         setUserStats(formattedStats);
+
       } catch (error) {
         console.log(error)
         showError("Something went wrong while fetching the balance.");
@@ -287,7 +289,7 @@ function Hero({ showModal, setUserStats, setData }) {
               fill="#00FFFF"
             />
           </svg> */}
-            <img src="/logo.png" alt="Logo" className="w-[200px] h-[150px]" />
+          <img src="/logo.png" alt="Logo" className="w-[200px] h-[150px]" />
 
 
         </div>

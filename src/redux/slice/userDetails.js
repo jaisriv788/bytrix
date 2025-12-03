@@ -9,7 +9,7 @@ const initialState = {
   contractAddress: "0xFe3039741Bac9F107Ee5EF8d55a0a9BbF1837572",
   savingContractAddress: "0x7751cCef575C389FA44674e2fb51d2F755fF1543",
   leaseConstractAddress: "0xBA44B2D68536035e6e019E68584570E3Ed084905",
-  companyWalletAddress: "0xcb79720f6c6155cd8e56f34da5bbc33ba6c53e8e",
+  companyWalletAddress: "0xcb79720F6C6155cd8e56f34DA5BBc33ba6C53E8e",
   referrer: "",
 };
 

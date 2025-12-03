@@ -270,12 +270,6 @@
 
 
 
-
-
-
-
-
-
 import {
   Copy,
   DollarSign,
@@ -480,7 +474,7 @@ const Navbar = ({ showModal }) => {
                 setMobileOpen(false);
               }}
             >
-              <a className="flex items-center gap-2"><Home size={15}/> Home</a>
+              <a className="flex items-center gap-2"><Home size={15} /> Home</a>
             </li>
 
             <li
@@ -490,7 +484,7 @@ const Navbar = ({ showModal }) => {
                 setMobileOpen(false);
               }}
             >
-              <a className="flex items-center gap-2"><DollarSign size={15}/> Loop</a>
+              <a className="flex items-center gap-2"><DollarSign size={15} /> Emporium</a>
             </li>
 
             <li
@@ -500,7 +494,7 @@ const Navbar = ({ showModal }) => {
                 setMobileOpen(false);
               }}
             >
-              <a className="flex items-center gap-2"><HandCoins size={15}/> Saving</a>
+              <a className="flex items-center gap-2"><HandCoins size={15} /> Future</a>
             </li>
 
             <li
@@ -510,7 +504,7 @@ const Navbar = ({ showModal }) => {
                 setMobileOpen(false);
               }}
             >
-              <a className="flex items-center gap-2"><HandCoins size={15}/> Lease</a>
+              <a className="flex items-center gap-2"><HandCoins size={15} /> Lease</a>
             </li>
 
             <div className="border-b mt-2 mb-1 px-2 py-1 text-slate-200">Connections</div>
@@ -522,18 +516,18 @@ const Navbar = ({ showModal }) => {
                 setMobileOpen(false);
               }}
             >
-              <a className="flex items-center gap-2"><Power size={15}/> {account ? account.slice(0,4)+"..."+account.slice(-4) : "Connect Wallet"}</a>
+              <a className="flex items-center gap-2"><Power size={15} /> {account ? account.slice(0, 4) + "..." + account.slice(-4) : "Connect Wallet"}</a>
             </li>
 
             {isConnected && (
               <li
                 className="px-2 py-1 hover:bg-slate-600 rounded"
                 onClick={() => {
-                  navigator.clipboard.writeText(account).then(()=>alert("Copied")).catch(()=>alert("Copy failed"));
+                  navigator.clipboard.writeText(account).then(() => alert("Copied")).catch(() => alert("Copy failed"));
                   setMobileOpen(false);
                 }}
               >
-                <a className="flex items-center gap-2"><Copy size={15}/> Copy Address</a>
+                <a className="flex items-center gap-2"><Copy size={15} /> Copy Address</a>
               </li>
             )}
 
@@ -545,7 +539,7 @@ const Navbar = ({ showModal }) => {
                   setMobileOpen(false);
                 }}
               >
-                <a className="flex items-center gap-2"><LogOut size={15}/> Logout</a>
+                <a className="flex items-center gap-2"><LogOut size={15} /> Logout</a>
               </li>
             )}
           </ul>

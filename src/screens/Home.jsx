@@ -39,19 +39,19 @@ function Home({ setShowModal }) {
       console.log(provider)
       const contract = new ethers.Contract(USDTAddress, erc20Abi, provider);
       const ctr = new ethers.Contract(contractAddress, contractAbi, provider);
-     
+
       const balance = await contract.balanceOf("0xFe3039741Bac9F107Ee5EF8d55a0a9BbF1837572");
       const decimals = await contract.decimals();
       const formatted = formatUnits(balance, decimals);
-      console.log(formatted);
+      // console.log(formatted);
       setUsdtBalance(formatted);
 
       const data2 = await ctr.getUserStats(companyWalletAddress);
-      
+
       const formattedStats = data2.map((v, i) =>
         i > 2 ? formatUnits(v, 18) : v.toString()
       );
-      console.log(formattedStats)
+
       setUserStats(formattedStats);
     } catch (error) {
       console.log(error)
@@ -68,75 +68,75 @@ function Home({ setShowModal }) {
   };
 
   return (
- <>
-     <div className="relative w-full min-h-screen flex flex-col items-center justify-center text-white overflow-hidden ">
+    <>
+      <div className="relative w-full min-h-screen flex flex-col items-center justify-center text-white overflow-hidden ">
 
-      {/* Background Video */}
-      <video
-        className="absolute top-0 left-0 w-full h-full object-cover"
-        src={videoBg}
-        autoPlay
-        loop
-        muted
-      />
+        {/* Background Video */}
+        <video
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          src={videoBg}
+          autoPlay
+          loop
+          muted
+        />
 
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-0"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-0"></div>
 
-      {/* MAIN CONTENT */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 py-16 w-full">
+        {/* MAIN CONTENT */}
+        <div className="relative z-10 flex flex-col items-center text-center px-6 py-16 w-full">
 
-        {/* LOGO SECTION */}
-        {/* <div className="w-28 h-28 rounded-2xl flex items-center justify-center 
+          {/* LOGO SECTION */}
+          {/* <div className="w-28 h-28 rounded-2xl flex items-center justify-center 
             bg-gradient-to-br from-[#00ff8f] to-[#0affd9] 
             shadow-[0_0_30px_rgba(0,255,200,0.4)]">
           <span className="text-5xl font-extrabold text-black">⚡</span>
         </div> */}
-            <img src="/logo.png" alt="Logo" className="w-[250px] h-[200px]" />
+          <img src="/logo.png" alt="Logo" className="w-[230px] h-[180px] pt-8" />
 
 
-        <h1 className="text-4xl md:text-5xl font-extrabold mt-4 tracking-wide">
-          BYTRIX ONE
-        </h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold  tracking-wide">
+            BYTRIX ONE
+          </h1>
 
-        <p className="text-white mt-2 text-xl  ">
-          The next generation cryptocurrency ecosystem
-        </p>
+          <p className="text-white mt-2 text-xl  ">
+            The next generation cryptocurrency ecosystem
+          </p>
 
-        {/* BUTTON */}
-        {!isConnected ? (
-          <button
-            onClick={() => setShowModal(true)}
-            className="mt-6 px-8 py-3 rounded-full text-black font-bold 
+          {/* BUTTON */}
+          {!isConnected ? (
+            <button
+              onClick={() => setShowModal(true)}
+              className="mt-6 px-8 py-3 rounded-full text-black font-bold 
               bg-gradient-to-r from-[#00ff9d] to-[#00ffd9] 
               shadow-[0_0_20px_rgba(0,255,200,0.4)] hover:scale-105 transition-all"
-          >
-            Connect Wallet
-          </button>
-        ) : (
-          <button
-            onClick={handleCopy}
-            className="mt-6 px-8 py-3 rounded-full text-black font-bold 
+            >
+              Connect Wallet
+            </button>
+          ) : (
+            <button
+              onClick={handleCopy}
+              className="mt-6 px-8 py-3 rounded-full text-black font-bold 
               bg-gradient-to-r from-[#00ff9d] to-[#00ffd9] 
               shadow-[0_0_20px_rgba(0,255,200,0.4)] hover:scale-105 transition-all flex items-center gap-2"
-          >
-            Join Now <Copy size={20} />
-          </button>
-        )}
+            >
+              Join Now <Copy size={20} />
+            </button>
+          )}
 
-        {/* STATS BOXES */}
-        <div className="flex flex-col md:flex-row gap-6 mt-12">
+          {/* STATS BOXES */}
+          <div className="flex flex-col md:flex-row gap-6 mt-12">
 
-          {/* Participants */}
-          <div className="w-90 bg-black/60 backdrop-blur-xl border border-[#00ff9d]/30 
+            {/* Participants */}
+            <div className="w-90 bg-black/60 backdrop-blur-xl border border-[#00ff9d]/30 
               shadow-[0_0_20px_rgba(0,255,150,0.3)] px-10 py-6 rounded-2xl text-center">
-            <p className="text-gray-300 text-sm">Participants</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#00ff9d]">
-              {userStats[0] || 0}
-            </h2>
-          </div>
+              <p className="text-gray-300 text-sm">Participants</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-[#00ff9d]">
+                {userStats[1] || 0}
+              </h2>
+            </div>
 
-          {/* Participant Income */}
-          {/* <div className="bg-black/60 backdrop-blur-xl border border-[#00eaff]/30 
+            {/* Participant Income */}
+            {/* <div className="bg-black/60 backdrop-blur-xl border border-[#00eaff]/30 
               shadow-[0_0_20px_rgba(0,200,255,0.3)] px-10 py-6 rounded-2xl text-center">
             <p className="text-gray-300 text-sm">Participant Income</p>
             <h2 className="text-3xl md:text-4xl font-extrabold text-[#2db2ff]">
@@ -144,8 +144,8 @@ function Home({ setShowModal }) {
             </h2>
           </div> */}
 
-          {/* Liquidity */}
-          {/* <div className="w-90 bg-black/60 backdrop-blur-xl border border-[#ffea00]/30 
+            {/* Liquidity */}
+            {/* <div className="w-90 bg-black/60 backdrop-blur-xl border border-[#ffea00]/30 
               shadow-[0_0_20px_rgba(255,255,0,0.3)] px-10 py-6 rounded-2xl text-center">
             <p className="text-gray-300 text-sm">Liquidity</p>
             <h2 className="text-2xl md:text-3xl font-bold text-[#ffe600]">
@@ -155,28 +155,28 @@ function Home({ setShowModal }) {
           </div> */}
 
 
-          <a
-  href="https://anghscan.org/address/0xFe3039741Bac9F107Ee5EF8d55a0a9BbF1837572"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="block"
->
-  <div
-    className="w-90 bg-black/60 backdrop-blur-xl border border-[#ffea00]/30 
+            <a
+              href="https://anghscan.org/address/0xFe3039741Bac9F107Ee5EF8d55a0a9BbF1837572"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <div
+                className="w-90 bg-black/60 backdrop-blur-xl border border-[#ffea00]/30 
     shadow-[0_0_20px_rgba(255,255,0,0.3)] px-10 py-6 rounded-2xl text-center cursor-pointer"
-  >
-    <p className="text-gray-300 text-sm">Liquidity</p>
-    <h2 className="text-2xl md:text-3xl font-bold text-[#ffe600]">
-      {balanceLoading ? "Loading..." : Math.round(parseFloat(usdtBalance))}
-    </h2>
-  </div>
-</a>
+              >
+                <p className="text-gray-300 text-sm">Liquidity</p>
+                <h2 className="text-2xl md:text-3xl font-bold text-[#ffe600]">
+                  {balanceLoading ? "Loading..." : Math.round(parseFloat(usdtBalance))}
+                </h2>
+              </div>
+            </a>
 
 
+          </div>
         </div>
       </div>
-    </div>
-<Content />
+      <Content />
     </>
 
   );
